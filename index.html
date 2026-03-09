@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Shilohu Prayer Hall</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Modern CSS Variables & Reset */
+        :root {
+            --primary-color: #1a237e;
+            /* Royal Blue */
+            --accent-color: #54e0f8;
+            /* Gold */
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --success: #10b981;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Ambient Background Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(26, 35, 126, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1rem 0.5rem;
+            /* Reduced padding */
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            /* Slightly smaller text */
+            color: var(--primary-color);
+            margin-bottom: 0.2rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 3rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .results-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), #283593);
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-main {
+            text-align: left;
+            flex: 1;
+            min-width: 250px;
+            z-index: 1;
+        }
+
+        .header-dashboard {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex: 1;
+            min-width: 250px;
+            max-height: 120px;
+            overflow-y: auto;
+            text-align: left;
+            z-index: 1;
+        }
+
+        .header-dashboard::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .header-dashboard::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .header-dashboard::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .header-dashboard h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 0.25rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+        }
+
+        .header-dashboard ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .header-dashboard li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            gap: 1rem;
+        }
+
+        .header-dashboard li:last-child {
+            border-bottom: none;
+        }
+
+        .ticket-id {
+            font-weight: bold;
+            color: #e0e7ff;
+            white-space: nowrap;
+        }
+
+        .ticket-name {
+            opacity: 0.9;
+            text-align: right;
+        }
+
+        .date-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            backdrop-filter: blur(4px);
+            display: inline-block;
+        }
+
+        /* Table/List Styles */
+        .member-list {
+            padding: 2rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-item:hover {
+            background-color: #f8fafc;
+            transform: translateX(5px);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .member-details h3 {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+        }
+
+        .member-details p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .grade {
+            font-weight: 700;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .grade.pass {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .grade.distinction {
+            background-color: rgba(255, 215, 0, 0.15);
+            color: #bfa100;
+        }
+
+        /* Search Box */
+        .search-container {
+            padding: 0 2rem;
+            margin-top: -1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-box-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-md);
+            border-radius: 15px;
+            background: white;
+            padding: 0.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: none;
+            /* border-radius: 15px; */
+            /* box-shadow: var(--shadow-md); */
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        .search-btn:hover {
+            background-color: #283593;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 1rem 0.5rem;
+            }
+
+            .logo-img {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 0.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+                margin-bottom: 0.1rem;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+
+            .card-header {
+                padding: 1.25rem 1rem;
+                flex-direction: column;
+            }
+
+            .header-main {
+                text-align: center;
+                width: 100%;
+            }
+
+            .header-dashboard {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .card-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .member-list {
+                padding: 0.5rem;
+            }
+
+            .result-item {
+                padding: 1rem;
+                flex-direction: row;
+                /* Keep row but allowing wrapping if needed, though row is usually better for this list */
+                gap: 0.5rem;
+            }
+
+            .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .member-details h3 {
+                font-size: 1rem;
+            }
+
+            .member-details p {
+                font-size: 0.8rem;
+            }
+
+            .grade {
+                font-size: 0.9rem;
+                padding: 0.3rem 0.6rem;
+                min-width: 60px;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-img {
+            max-width: 150px;
+            height: 150px;
+            /* Ensure circular aspect ratio if image is rectangular */
+            object-fit: cover;
+            /* Crop to fit cleanly */
+            margin-bottom: 0.5rem;
+            border-radius: 50%;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 10px 25px rgba(26, 35, 126, 0.2);
+            animation: fadeInDown 1s ease-out, float 6s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        header .logo-text {
+            animation: fadeInDown 1s ease-out 0.3s backwards;
+        }
+
+        header .subtitle {
+            animation: fadeInDown 1s ease-out 0.6s backwards;
+        }
+    </style>
+    <style>
+        /* Additional Sections Styles */
+        .section-container {
+            margin-top: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            padding-right: 1rem;
+            background: var(--bg-color);
+            z-index: 1;
+        }
+
+        .section-header::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, var(--accent-color), transparent);
+            opacity: 0.5;
+        }
+
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .type-badge {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Attendance Styles */
+        .attendance-list {
+            list-style: none;
+        }
+
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .attendance-item:last-child {
+            border-bottom: none;
+        }
+
+        .status {
+            font-weight: 600;
+        }
+
+        .status.present {
+            color: var(--success);
+        }
+
+        .status.absent {
+            color: #ef4444;
+        }
+
+        /* Gallery Button & Modal */
+        .gallery-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-color), #fcc200);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            font-size: 1.5rem;
+        }
+
+        .gallery-fab:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .gallery-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            z-index: 2000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(8px);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            margin-bottom: 2rem;
+            max-width: 1000px;
+            margin: 0 auto 2rem;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: #1a237e;
+            /* Dark background under image */
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transform: perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.6s ease;
+        }
+
+        /* Color Overlay */
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(84, 224, 248, 0.6) 0%, rgba(26, 35, 126, 0.8) 100%);
+            opacity: 0.7;
+            z-index: 1;
+            transition: opacity 0.5s ease;
+            mix-blend-mode: soft-light;
+        }
+
+        /* Glowing Border on Hover */
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px solid transparent;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            z-index: 2;
+            transition: opacity 0.5s ease;
+            box-shadow: inset 0 0 20px var(--accent-color);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(1);
+        }
+
+        /* 3D Tilt & Glow Hover */
+        .gallery-item:hover {
+            transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) scale3d(1.05, 1.05, 1.05);
+            box-shadow: 15px 15px 30px rgba(26, 35, 126, 0.3), -10px -10px 25px rgba(84, 224, 248, 0.2);
+            z-index: 10;
+        }
+
+        /* Reveal Image behind overlay */
+        .gallery-item:hover::before {
+            opacity: 0;
+        }
+
+        /* Show Glowing Border */
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        /* Deep Zoom */
+        .gallery-item:hover img {
+            transform: scale(1.15);
+        }
+
+        @media (max-width: 768px) {
+            .split-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-fab {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* ... existing styles ... */
+
+        /* Accordion Styles */
+        .date-accordion {
+            margin-top: 1rem;
+        }
+
+        .date-btn {
+            background: rgba(26, 35, 126, 0.05);
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 1rem;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: 0.4s;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .date-btn:hover,
+        .date-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .date-btn::after {
+            content: '+';
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .date-btn.active::after {
+            transform: rotate(45deg);
+        }
+
+        .date-content {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .date-content .inner-pad {
+            padding: 1rem 0;
+        }
+
+        /* Scroll Animation Styles */
+        .reveal {
+            position: relative;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Fullscreen Image Lightbox */
+        #image-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            z-index: 4000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        #image-lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #lightbox-img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            object-fit: contain;
+            user-select: none;
+        }
+
+        #image-lightbox.active #lightbox-img {
+            transform: scale(1);
+        }
+
+        #lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+            z-index: 4010;
+        }
+
+        #lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+    </style>
+    <style>
+        /* Announcement Bar */
+        .announcement-bar {
+            background-color: var(--accent-color);
+            color: var(--text-main);
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 1000;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .announcement-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .announcement-content:hover {
+            animation-play-state: paused;
+        }
+
+        .material-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .material-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .material-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .material-icon {
+            font-size: 2rem;
+            background: rgba(26, 35, 126, 0.1);
+            color: var(--primary-color);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .material-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .material-details p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: #283593;
+        }
+
+        /* Upload Placeholder Style */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(26, 35, 126, 0.02);
+            color: var(--primary-color);
+        }
+
+        .upload-area i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="announcement-bar">
+        <div class="announcement-content">
+            🔔 <strong>LATEST UPDATE:</strong> JANUARY 2026 EXAMINATION RESULTS HAVE BEEN OFFICIALLY RELEASED. PLEASE
+            CHECK YOUR HALL TICKET NUMBER ABOVE. - NEXT EXAMINATION WILL BE HELD ON 29/03/2026 . THE METIREAL HAS
+            PROVIDED
+            AT THE BOTTUM OF THE PAGE.
+        </div>
+    </div>
+    <header>
+        <img src="images/SPH.png" alt="Shilohu Prayer Hall Logo" class="logo-img">
+        <h1 class="logo-text">SHILOHU PRAYER HALL</h1>
+        <p class="subtitle">latest update result released in 01/01/2026</p>
+    </header>
+    <div class="announcement-bar">
+        <div class="announcement-content">
+            🔔 <strong><b>హెచ్చరిక :</b></strong> జనవరి 2026 పరీక్ష ఫలితాలు అధికారికంగా విడుదలయ్యాయి. దయచేసి
+            పైన ఉన్న మీ హాల్ టికెట్ నంబర్‌ను తనిఖీ చేయండి. - తదుపరి పరీక్ష 29/03/2026న జరుగుతుంది. మెటీరియల్ పేజీ దిగువన
+            అందించబడింది.
+        </div>
+    </div>
+    <main>
+        <div class="results-card reveal">
+            <div class="card-header">
+                <div class="header-main">
+                    <h2>Official Results Release / ఫలితాలు :</h2>
+                    <span class="date-badge" id="current-date">January 2026</span>
+                </div>
+                <div class="header-dashboard">
+                    <h3>📋 Hall Tickets Dashboard</h3>
+                    <ul>
+                        <li><span class="ticket-id">SPH-2026-001</span> <span class="ticket-name">ANANDH SAGAR</span>
+                        </li>
+                        <li><span class="ticket-id">SPH-2026-002</span> <span class="ticket-name">ANKAM BHAGATH</span>
+                        </li>
+                        <li><span class="ticket-id">SPH-2026-003</span> <span class="ticket-name">ANKAM SHALEMRAJ</span>
+                        </li>
+                        <li><span class="ticket-id">SPH-2026-004</span> <span class="ticket-name">BILLA PREM
+                                CHENDU</span></li>
+                        <li><span class="ticket-id">SPH-2026-005</span> <span class="ticket-name">BILLA SANTHOS</span>
+                        </li>
+                        <li><span class="ticket-id">SPH-2026-006</span> <span class="ticket-name">VELPULA LAKSHMI</span>
+                        </li>
+                        <li><span class="ticket-id">SPH-2026-007</span> <span class="ticket-name">VELPULA SATHISH</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-box-wrapper">
+                    <input type="text" class="search-input"
+                        placeholder="Enter Member ID (e.g. CHURCH-YEAR-ROLL NO..)..." id="searchInput">
+                    <button id="searchButton" class="search-btn">Check Result</button>
+                </div>
+                <div id="errorMsg"
+                    style="display:none; color: red; text-align: center; margin-top: 1rem; font-weight: 500;"></div>
+            </div>
+            <div class="member-list" id="memberList">
+                <div class="result-item">
+                    <div class="member-info">
+                        <div class="avatar">AS</div>
+                        <div class="member-details">
+                            <h3>ANANDH SAGAR</h3>
+                            <p>ID: SPH-2026-001</p>
+                        </div>
+                    </div>
+                    <div class="grade distinction">FAILED</div>
+                </div>
+                <div class="result-item">
+                    <div class="member-info">
+                        <div class="avatar">AB</div>
+                        <div class="member-details">
+                            <h3>ANKAM BHAGATH</h3>
+                            <p>ID: SPH-2026-002</p>
+                        </div>
+                    </div>
+                    <div class="grade pass">5th <br>36.66% <br>055/150</div>
+                </div>
+                <div class="result-item">
+                    <div class="member-info">
+                        <div class="avatar">AS</div>
+                        <div class="member-details">
+                            <h3>ANKAM SHALEMRAJ</h3>
+                            <p>ID: SPH-2026-003</p>
+                        </div>
+                    </div>
+                    <div class="grade pass">1st<br> 77.33% <br>116/150</div>
+                </div>
+                <div class="result-item">
+                    <div class="member-info">
+                        <div class="avatar">BP</div>
+                        <div class="member-details">
+                            <h3>BILLA PREM CHENDU</h3>
+                            <p>ID: SPH-2026-004</p>
+                        </div>
+                    </div>
+                    <div class="grade pass">4th<br> 42%<br> 063/150</div>
+                </div>
+                <div class="result-item">
+                    <div class="member-info">
+                        <div class="avatar">BS</div>
+                        <div class="member-details">
+                            <h3>BILLA SANTHOS</h3>
+                            <p>ID: SPH-2026-005</p>
+                        </div>
+                    </div>
+                    <div class="grade distinction">FAILED</div>
+                </div>
+                <div class="result-item">
+                    <div class="member-info">
+                        <div class="avatar">VL</div>
+                        <div class="member-details">
+                            <h3>VELPULA LAKSHMI</h3>
+                            <p>ID: SPH-2026-006</p>
+                        </div>
+                    </div>
+                    <div class="grade pass">3rd<br> 40%<br> 072/150</div>
+                </div>
+                <div class="result-item">
+                    <div class="member-info">
+                        <div class="avatar">VS</div>
+                        <div class="member-details">
+                            <h3>VELPULA SATHISH</h3>
+                            <p>ID: SPH-2026-007</p>
+                        </div>
+                    </div>
+                    <div class="grade pass">2nd <br>64.66% <br>097/150</div>
+                </div>
+            </div>
+        </div>
+        <div class="section-container reveal">
+            <div class="section-header">
+                <h2>Information Board</h2>
+            </div>
+            <div class="split-grid">
+                <div class="info-card reveal">
+                    <h3>📢 ప్రకటనలు </h3>
+                    <p>ఆధివరం ఉదయం సండే స్కూల్ 8:00 <br>మద్యానం ఆరాధన 10:00<br>సాయంత్రం సువార్త కూడిక 8:00<br>బుదయవరం
+                        స్త్రీల వాక్య పరిచర్య కూడిక 8:00 <br>శేనివారం సాయంత్రం విజ్ఞాపన కూడిక 8:00 </p>
+                </div>
+                <div class="info-card reveal">
+                    <h3>📅 ప్రాముక్య తేదీలు </h3>
+                    <p>03 / ఏప్రిల్ / 2026 గుడ్ ఫ్రైడే<br>05 / ఏప్రిల్ / 2026 ఈటర్ <br>29/ 03/ 2026 పరీక్ష జరుగును </p>
+                </div>
+                <!-- Memory Verses with Accordion -->
+                <div class="info-card reveal">
+                    <h3><b>కంటస్థ వాక్యాలు </b></h3>
+                    <div class="date-accordion">
+                        <button class="date-btn">04-01-2026</button>
+                        <div class="date-content">
+                            <div class="inner-pad">
+                                <h6>ఇదిగో తూర్పుదేశమున వారు చూచిన నక్షత్రము ఆ శిశువు ఉండిన చోటికి మీదుగా వచ్చి
+                                    నిలుచువరకు వారికి ముందుగా నడిచెను. వారు ఆ నక్షత్రమును చూచి, అత్యానందభరితులై
+                                    యింటిలోనికి వచ్చి,తల్లియైన మరియను ఆ శిశువును చూచి, సాగిలపడి, ఆయనను పూజించి, తమ
+                                    పెట్టెలు విప్పి, బంగారమును సాంబ్రాణిని బోళమును కానుకలుగా ఆయనకు సమర్పించిరి.</h6>
+                                <br>మత్తయి సువార్త 2 : 9-11
+                            </div>
+                        </div>
+                        <button class="date-btn">11-01-2026</button>
+                        <div class="date-content">
+                            <div class="inner-pad">
+                                <h6> ఏలయనగా పాపమువలన వచ్చు జీతము మరణము, అయితే దేవుని కృపావరము మన ప్రభువైన
+                                    క్రీస్తుయేసునందు నిత్య జీవము.</h6>రోమీయులకు 6 : 23 <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bible Verses with Accordion -->
+                <div class="info-card reveal">
+                    <h3><b>బైబిల్ వాక్యాలు </b></h3>
+                    <div class="date-accordion">
+                        <button class="date-btn">04-01-2026</button>
+                        <div class="date-content">
+                            <div class="inner-pad">
+                                <p>బైబిల్ లో ఉన్న రెండు రకాలైన నక్షత్రాలు<br> 1. వేకుయచుక్క ,తేజోనక్షత్రం,లూసిఫర్
+                                    <br>2.
+                                    బెత్లెహేములో
+                                    జనియించిన రక్షకుడైన నక్షత్రం
+                                </p>
+                            </div>
+                        </div>
+                        <button class="date-btn">11-01-2026</button>
+                        <div class="date-content">
+                            <div class="inner-pad">
+                                <p>కుమారునికి కి తండ్రికి మద్య మన మద్య ఉన్న సంబంధం<br>ఉదాహరణ
+                                    <br>చిన్నపిల్లవాడు రైలు పట్టాల మీద చనిపోవటం ,తండ్రికి తెలిసి కూడా అలానే ఉండటం
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Section -->
+        <div class="section-container reveal">
+            <div class="section-header">
+                <h2>Attendance & Performance / హాజరు : </h2>
+            </div>
+            <div class="split-grid">
+                <div class="info-card reveal">
+                    <h3><span class="type-badge">2026 </span> సండే స్కూల్ </h3>
+
+                    <div class="date-accordion">
+                        <button class="date-btn">11-01-2026</button>
+                        <div class="date-content">
+                            <ul class="attendance-list" style="padding: 1rem 0;">
+                                <li class="attendance-item">
+                                    <span>శ్రీ లౌక్య</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>వెంకట లక్ష్మీ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అలక నంధ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం యామిని</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--text-light);">0/52</span>
+                                        <span class="status absent">0%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>శివ ధీప్తి</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>బైలడుగు గోపి</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం అభి</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం సిద్ధు</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>బిల్లా సంతోష్</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>సతీష్</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం భగత్</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం హర్షవర్ధన్</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>బిల్లా ప్రేమ్ చెందు </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>ఆనంద్ సాగర్</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/52</span>
+                                        <span class="status present">100%</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card reveal">
+                    <h3><span class="type-badge">2026 </span>పెద్దవాళ్ళు </h3>
+                    <div class="date-accordion">
+                        <button class="date-btn">07-01-2026</button>
+                        <div class="date-content">
+                            <ul class="attendance-list" style="padding: 1rem 0;">
+                                <li class="attendance-item">
+                                    <span>అంకం అంజలి</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/220</span>
+                                        <span class="status present">4.4%</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం రాధ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం పార్వతి </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/220</span>
+                                        <span class="status present">4.4 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం సురేష్ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/168</span>
+                                        <span class="status present">3.36 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం యెంకాయమ్మ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం అచ్చమ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>బిల్లా అంజమ్మ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం సుబ్బులమ్మ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">3/220</span>
+                                        <span class="status present">6.6 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>తూమాటి మణిక్యమ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">3/220</span>
+                                        <span class="status present">6.6 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>కొర్రపాటి కోటేష </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/168</span>
+                                        <span class="status present">1.68 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>కొరపతి అనవయమ్మ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>బిల్లా యలమంద </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/168</span>
+                                        <span class="status present">1.68 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>బిల్లా చిట్టెమ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం సుబ్బాయమ్మ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/220</span>
+                                        <span class="status present">4.4 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం నాగేంధ్రం</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/220</span>
+                                        <span class="status present">4.4 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>వెంకటమ్మా </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>సుకుమార్ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/168</span>
+                                        <span class="status present">3.36 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>జ్యోతి </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">3/220</span>
+                                        <span class="status present">6.6 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>వేల్పుల ఋతుమ్మ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>వేల్పుల రమణ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/220 </span>
+                                        <span class="status present">4.4 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>భూసియ్య </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/168</span>
+                                        <span class="status present">1.68 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>నన్నామ </span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220</span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>దాసరి వెంకటేశ్వర్లు</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">2/168 </span>
+                                        <span class="status present">3.36 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>ధనలక్ష్మి</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">1/220 </span>
+                                        <span class="status present">2.2 %</span>
+                                    </div>
+                                </li>
+                                <li class="attendance-item">
+                                    <span>అంకం నాగమ్మ</span>
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <span style="font-weight: bold; color: var(--primary-color);">3/220</span>
+                                        <span class="status present">6.6 %</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photos Section -->
+        <div class="section-container reveal">
+            <div class="section-header">
+                <h2>Photo Gallery / ఫోటోలు :</h2>
+            </div>
+            <div class="date-accordion">
+                <button class="date-btn">04-01-2026 Gallery</button>
+                <div class="date-content">
+                    <div class="gallery-grid" style="padding: 1rem 0;">
+                        <div class="gallery-item"><img src="E:\personal\Screenshots\02.jpeg" alt="Member Photo"></div>
+                        <div class="gallery-item"><img src="E:\personal\Screenshots\03.jpeg" alt="Member Photo"></div>
+                        <div class="gallery-item"><img src="E:\personal\Screenshots\04.jpeg" alt="Member Photo"></div>
+                        <div class="gallery-item"><img src="E:\personal\Screenshots\06.jpeg" alt="Member Photo"></div>
+                        <div class="gallery-item"><img src="E:\personal\Screenshots\05.jpeg" alt="Member Photo"></div>
+                        <div class="gallery-item"><img src="E:\personal\Screenshots\07.jpeg" alt="Member Photo"></div>
+                        <div class="gallery-item"><img src="E:\personal\Screenshots\01.jpeg" alt="Member Photo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Materials Section -->
+        <div class="section-container reveal">
+            <div class="section-header">
+                <h2>Materials & Resources</h2>
+            </div>
+
+            <div class="materials-list">
+                <div class="material-card">
+                    <div class="material-info">
+                        <div class="material-icon">📄</div>
+                        <div class="material-details">
+                            <h3>SHILOHU PRAYER HALL 2026</h3>
+                            <p>Document</p>
+                        </div>
+                    </div>
+                    <div class="material-actions" style="display: flex; gap: 0.5rem;">
+                        <a href="materials/SHILOHU PRAYER HALL 2026 (pdf.io).pdf" target="_blank" class="download-btn"
+                            style="background-color: var(--accent-color); color: var(--primary-color);">View</a>
+                        <a href="materials/SHILOHU PRAYER HALL 2026 (pdf.io).pdf" download class="download-btn"
+                            target="_blank">Download</a>
+                    </div>
+                </div>
+
+                <div class="material-card">
+                    <div class="material-info">
+                        <div class="material-icon">🎵</div>
+                        <div class="material-details">
+                            <h3>Sunday School Songs Book</h3>
+                            <p>PDF Document</p>
+                        </div>
+                    </div>
+                    <div class="material-actions" style="display: flex; gap: 0.5rem;">
+                        <a href="materials/sunday school songs book.pdf" target="_blank" class="download-btn"
+                            style="background-color: var(--accent-color); color: var(--primary-color);">View</a>
+                        <a href="materials/sunday school songs book.pdf" download class="download-btn">Download</a>
+                    </div>
+                </div>
+
+                <div class="material-card">
+                    <div class="material-info">
+                        <div class="material-icon">📱</div>
+                        <div class="material-details">
+                            <h3>Elders Songs App</h3>
+                            <p>Google Play Store / ఆండ్రాయిడ్ యాప్</p>
+                        </div>
+                    </div>
+                    <div class="material-actions">
+                        <a href="https://play.google.com/store/apps/details?id=com.vincentbiblesearch.csk"
+                            target="_blank" class="download-btn"
+                            style="background-color: #10b981; min-width: 100px; text-align: center;">Get App</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 Shilohu Prayer Hall. All Rights Reserved.</p>
+    </footer>
+    <script>
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const items = document.querySelectorAll('.result-item');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Initial State
+        items.forEach(item => {
+            item.style.display = 'none';
+        });
+
+        function checkResult() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            let found = false;
+
+            if (!searchTerm) {
+                alert("Please enter an ID or Name");
+                return;
+            }
+
+            items.forEach(item => item.style.display = 'none');
+            errorMsg.style.display = 'none';
+
+            items.forEach(item => {
+                const nameHeader = item.querySelector('h3');
+                const idPara = item.querySelector('.member-details p');
+
+                if (nameHeader && idPara) {
+                    const name = nameHeader.textContent.toLowerCase();
+                    const id = idPara.textContent.toLowerCase().replace('id: ', '').trim();
+
+                    if (id.includes(searchTerm) || name.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+
+                        // Trigger reflow
+                        void item.offsetWidth;
+
+                        setTimeout(() => {
+                            item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, 50);
+
+                        found = true;
+                    }
+                }
+            });
+
+            if (!found) {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = "No result found for ID/Name: " + searchInput.value;
+            }
+        }
+
+        searchButton.addEventListener('click', checkResult);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkResult();
+        });
+
+
+
+        // Accordion Functionality
+        const acc = document.getElementsByClassName("date-btn");
+        for (let i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+
+        // Scroll Animation Logic
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load to show initial elements
+        reveal();
+
+        // High-Quality Lightbox Functionality
+        const lightbox = document.getElementById('image-lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const galleryImages = document.querySelectorAll('.gallery-item img');
+
+        galleryImages.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                lightboxImg.src = img.src;
+                lightbox.style.display = 'flex';
+                // Trigger reflow for animation
+                void lightbox.offsetWidth;
+                lightbox.classList.add('active');
+            });
+        });
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            setTimeout(() => {
+                lightbox.style.display = 'none';
+                lightboxImg.src = '';
+            }, 400); // match transition duration
+        };
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg) {
+                closeLightbox();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+
+    </script>
+
+    <!-- React and Mammoth.js for Document Viewer -->
+    <div id="react-doc-viewer-root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+
+    <style>
+        @keyframes reactDocSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .view-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+    </style>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function DocViewerModal() {
+            const [isOpen, setIsOpen] = useState(false);
+            const [isVisible, setIsVisible] = useState(false); // For React Animation
+            const [docUrl, setDocUrl] = useState('');
+            const [htmlContent, setHtmlContent] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+
+            useEffect(() => {
+                const handleViewClick = (e) => {
+                    if (e.target.classList.contains('view-btn')) {
+                        e.preventDefault();
+                        const url = e.target.getAttribute('data-doc');
+                        setDocUrl(url);
+                        setIsOpen(true);
+                        // Trigger animation after render
+                        setTimeout(() => setIsVisible(true), 10);
+                        loadDoc(url);
+                    }
+                };
+                document.addEventListener('click', handleViewClick);
+                return () => document.removeEventListener('click', handleViewClick);
+            }, []);
+
+            const loadDoc = (url) => {
+                setIsLoading(true);
+                fetch(encodeURI(url))
+                    .then(res => {
+                        if (!res.ok) throw new Error("Could not fetch the document.");
+                        return res.arrayBuffer();
+                    })
+                    .then(buffer => mammoth.convertToHtml({ arrayBuffer: buffer }))
+                    .then(result => {
+                        setHtmlContent(result.value);
+                        setIsLoading(false);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        if (window.location.protocol === 'file:') {
+                            setHtmlContent('<div style="text-align:center; padding:2rem;"><p style="font-size:3rem; margin-bottom:1rem;">🔒</p><h3 style="color:#ef4444; margin-bottom:1rem;">Browser Security Restriction</h3><p>Browsers block reading local files (like documents) for previews when you open the HTML file directly from your computer folders (using <code>file:///</code>).<br><br><b>To fix this, you can:</b><br>1. Use a local web server like <b>VS Code Live Server</b>.<br>2. Upload your website to a real web host.</p><p style="margin-top:1.5rem; color:#1f2937; padding:1rem; background:rgba(0,0,0,0.05); border-radius:8px;">Since you are running this locally without a server, please just click the <b>Download</b> button on the material card to view the file normally for now!</p></div>');
+                        } else {
+                            setHtmlContent('<div style="text-align:center; color:red; padding:2rem;"><h3 style="margin-bottom:1rem;">Failed to Load Preview</h3><p>Perhaps this is not a valid DOCX file, or the file was not found.</p></div>');
+                        }
+                        setIsLoading(false);
+                    });
+            }
+
+            const closeModal = () => {
+                setIsVisible(false);
+                setTimeout(() => {
+                    setIsOpen(false);
+                    setHtmlContent('');
+                    setDocUrl('');
+                }, 400); // match transition duration
+            };
+
+            if (!isOpen && !docUrl) return null;
+
+            return (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+                    backgroundColor: 'rgba(15, 23, 42, 0.85)', zIndex: 3000,
+                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    backdropFilter: 'blur(4px)',
+                    opacity: isVisible ? 1 : 0, transition: 'opacity 0.4s ease',
+                    pointerEvents: isVisible ? 'auto' : 'none'
+                }} onClick={closeModal}>
+                    <div style={{
+                        backgroundColor: '#ffffff', width: '90%', maxWidth: '900px',
+                        height: '85%', borderRadius: '16px', padding: '25px',
+                        overflowY: 'auto', position: 'relative',
+                        transform: isVisible ? 'scale(1) translateY(0)' : 'scale(0.85) translateY(30px)',
+                        transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease',
+                        opacity: isVisible ? 1 : 0,
+                        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
+                    }} onClick={e => e.stopPropagation()}>
+
+                        <button onClick={closeModal} style={{
+                            position: 'sticky', top: '0px', float: 'right',
+                            background: '#f1f5f9', border: 'none', borderRadius: '50%',
+                            width: '40px', height: '40px', fontSize: '20px', cursor: 'pointer',
+                            display: 'flex', justifyContent: 'center', alignItems: 'center',
+                            color: '#334155', zIndex: 10, transition: 'background 0.2s',
+                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                        }} onMouseOver={e => e.currentTarget.style.background = '#e2e8f0'}
+                            onMouseOut={e => e.currentTarget.style.background = '#f1f5f9'}>✖</button>
+
+                        <h2 style={{ marginBottom: '20px', borderBottom: '2px solid #e2e8f0', paddingBottom: '15px', color: '#1a237e' }}>
+                            Document Preview
+                        </h2>
+
+                        {isLoading ? (
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60%' }}>
+                                <div style={{
+                                    border: '4px solid #f3f3f3', borderTop: '4px solid #1a237e',
+                                    borderRadius: '50%', width: '50px', height: '50px',
+                                    animation: 'reactDocSpin 1s linear infinite'
+                                }}></div>
+                            </div>
+                        ) : (
+                            <div className="doc-content" dangerouslySetInnerHTML={{ __html: htmlContent }} style={{
+                                lineHeight: 1.8, color: '#1f2937', fontFamily: 'inherit',
+                                fontSize: '1rem', paddingRight: '15px'
+                            }} />
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('react-doc-viewer-root'));
+        root.render(<DocViewerModal />);
+    </script>
+
+    <!-- Image Lightbox Container -->
+    <div id="image-lightbox">
+        <button id="lightbox-close">✖</button>
+        <img id="lightbox-img" src="" alt="Enlarged Photo">
+    </div>
+</body>
+
+</html>
