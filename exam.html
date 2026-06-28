@@ -1,0 +1,5196 @@
+<!DOCTYPE html>
+<html lang="te">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>బైబిల్ క్విజ్ ఆన్‌లైన్ పరీక్ష (Bible Quiz Online Exam)</title>
+
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Ramabhadra&family=NTR&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase Compatibility SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        /* Premium CSS Design System */
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --accent: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.4);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f97316;
+            --bg-dark: #090d16;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: rgba(255, 255, 255, 0.08);
+            --font-telugu: 'Ramabhadra', 'NTR', sans-serif;
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(rgba(9, 13, 22, 0.85), rgba(9, 13, 22, 0.85)), url('images/SPH.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Beautiful Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .telugu {
+            font-family: var(--font-telugu);
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(17, 24, 39, 0.5);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .logo-title h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #fff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-title p {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1280px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glass Card Style */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            padding: 2.5rem;
+        }
+
+        /* Screen State Animations */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Welcome / Register Screen */
+        .welcome-card {
+            max-width: 600px;
+            margin: 3rem auto;
+            text-align: center;
+        }
+
+        .welcome-icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 5px var(--accent-glow));
+            }
+
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 15px var(--accent-glow));
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: var(--font-sans);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+        }
+
+        .input-field.telugu-input {
+            font-family: var(--font-telugu);
+            font-size: 1.2rem;
+        }
+
+        .rules-box {
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 4px solid var(--accent);
+            border-radius: 4px;
+            padding: 1.25rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .rules-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+        }
+
+        .rules-list {
+            list-style-type: none;
+        }
+
+        .rules-list li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .rules-list li i {
+            color: var(--accent);
+            margin-top: 4px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-sans);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #f59e0b);
+            color: #0b0f19;
+        }
+
+        .btn-accent:hover {
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #f87171);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Active Exam Screen Layout */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 8fr 4fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Question Panel styling */
+        .question-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .question-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .question-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .question-card.highlighted {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+            gap: 1rem;
+        }
+
+        .q-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .q-number {
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .bookmark-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+            padding: 0.2rem;
+        }
+
+        .bookmark-btn:hover {
+            color: var(--accent);
+        }
+
+        .bookmark-btn.active {
+            color: var(--accent);
+        }
+
+        /* Option Cards styling */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.85rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
+            color: var(--text-main);
+        }
+
+        .option-label:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hide standard radio but style it */
+        .option-label input[type="radio"] {
+            display: none;
+        }
+
+        .option-bullet {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            color: transparent;
+        }
+
+        .option-label:hover .option-bullet {
+            border-color: var(--accent);
+        }
+
+        .option-label.selected {
+            background: rgba(79, 70, 229, 0.15);
+            border-color: var(--primary);
+        }
+
+        .option-label.selected .option-bullet {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        /* Sidebar / Palette panel styling */
+        .sidebar-panel {
+            position: sticky;
+            top: 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Timer section */
+        .timer-card {
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .timer-header {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .timer-display {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff;
+            font-family: monospace;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .timer-display.warning {
+            color: var(--warning);
+            animation: pulse-border 1.5s infinite;
+        }
+
+        .timer-display.danger {
+            color: var(--danger);
+            animation: flash-red 0.8s infinite;
+            text-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        @keyframes flash-red {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            height: 6px;
+            width: 100%;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 100%;
+            transition: width 1s linear, background-color 0.5s ease;
+        }
+
+        /* Question Palette Grid */
+        .palette-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .palette-card h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .palette-stats {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--accent);
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .palette-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .palette-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .palette-btn.unvisited {
+            border-color: var(--border);
+        }
+
+        .palette-btn.visited {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.08);
+            color: var(--danger);
+        }
+
+        .palette-btn.answered {
+            background: var(--success);
+            border-color: var(--success);
+            color: #0b0f19;
+        }
+
+        .palette-btn.bookmarked {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .palette-btn.current {
+            box-shadow: 0 0 0 2px var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Color Guide Legend */
+        .palette-legend {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px 12px;
+            margin-top: 1.25rem;
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        .legend-color.unvisited {
+            background: transparent;
+        }
+
+        .legend-color.visited {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: var(--danger);
+        }
+
+        .legend-color.answered {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .legend-color.bookmarked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Navigation Actions at bottom */
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(17, 24, 39, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            gap: 1rem;
+        }
+
+        /* Modal dialog */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: #111827;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .modal-backdrop.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .modal-body {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* Results Dashboard styling */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .results-hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: radial-gradient(circle at center, rgba(79, 70, 229, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 16px;
+        }
+
+        .score-circle {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) calc(var(--percentage) * 1%), rgba(255, 255, 255, 0.05) 0);
+            margin: 0.5rem auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Inner circle mask */
+        .score-circle::after {
+            content: '';
+            position: absolute;
+            width: 156px;
+            height: 156px;
+            background: #0e121e;
+            border-radius: 50%;
+        }
+
+        .score-value {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .score-num {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .results-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin: 2.5rem 0;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .detail-card i {
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Review Area */
+        .review-section {
+            margin-top: 3rem;
+        }
+
+        .review-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-filter {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.85rem;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .review-card.correct-item {
+            border-left: 4px solid var(--success);
+        }
+
+        .review-card.incorrect-item {
+            border-left: 4px solid var(--danger);
+        }
+
+        .review-q-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .review-q-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+
+        .review-status-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .review-status-badge.correct {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .review-status-badge.incorrect {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .answer-comp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+            border-top: 1px dotted rgba(255, 255, 255, 0.05);
+            padding-top: 0.6rem;
+        }
+
+        .ans-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ans-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .ans-text {
+            font-weight: 600;
+        }
+
+        .ans-text.success {
+            color: var(--success);
+        }
+
+        .ans-text.danger {
+            color: var(--danger);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1f2937;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            font-size: 1.25rem;
+        }
+
+        .toast.success i {
+            color: var(--success);
+        }
+
+        .toast.error i {
+            color: var(--danger);
+        }
+
+        .toast.info i {
+            color: var(--accent);
+        }
+
+        /* Print styling specifically for certificate creation */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+            }
+
+            header,
+            .nav-actions,
+            .timer-card,
+            .sidebar-panel,
+            .review-section,
+            .btn,
+            .results-hero h1,
+            .results-hero p,
+            .score-circle::after {
+                display: none !important;
+            }
+
+            main {
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+
+            .glass-card {
+                background: transparent !important;
+                box-shadow: none !important;
+                border: none !important;
+                backdrop-filter: none !important;
+                padding: 0 !important;
+            }
+
+            .screen.active {
+                display: block !important;
+            }
+
+            .print-certificate-container {
+                display: block !important;
+                border: 10px double #d97706;
+                padding: 3rem;
+                text-align: center;
+                max-width: 700px;
+                margin: 4rem auto;
+                position: relative;
+                background: #fff !important;
+                color: #000 !important;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .cert-title {
+                font-family: var(--font-sans);
+                font-size: 2.2rem;
+                font-weight: 700;
+                color: #854d0e;
+                margin-bottom: 0.5rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .cert-subtitle {
+                font-size: 1.1rem;
+                color: #4b5563;
+                margin-bottom: 2.5rem;
+            }
+
+            .cert-recipient {
+                font-family: var(--font-telugu);
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: #1e1b4b;
+                border-bottom: 2px solid #854d0e;
+                display: inline-block;
+                padding: 0.25rem 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .cert-body {
+                font-family: var(--font-telugu);
+                font-size: 1.3rem;
+                line-height: 1.8;
+                color: #374151;
+                margin-bottom: 3rem;
+            }
+
+            .cert-footer {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 4rem;
+                border-top: 1px solid #e5e7eb;
+                padding-top: 1.5rem;
+            }
+
+            .cert-sign {
+                text-align: center;
+                font-size: 0.9rem;
+                color: #6b7280;
+            }
+
+            .cert-sign h4 {
+                color: #1f2937;
+                font-size: 1rem;
+                margin-bottom: 0.25rem;
+            }
+        }
+
+        /* Print certificate container - hidden in screen rendering */
+        .print-certificate-container {
+            display: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-panel {
+                position: static;
+            }
+
+            .palette-grid {
+                grid-template-columns: repeat(10, 1fr);
+                max-height: 180px;
+            }
+
+            header {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .question-card {
+                padding: 0.85rem 1rem !important;
+                margin-bottom: 0.85rem !important;
+                border-radius: 6px !important;
+            }
+
+            main {
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .welcome-card {
+                margin: 1rem auto;
+            }
+
+            .q-text {
+                font-size: 1.1rem;
+            }
+
+            .option-label {
+                font-size: 1rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .timer-display {
+                font-size: 1.8rem;
+            }
+
+            .palette-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .question-card {
+                padding: 0.75rem 0.85rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+
+            .nav-actions button,
+            .nav-actions span {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <i class="fa-solid fa-bible logo-icon"></i>
+            <div class="logo-title">
+                <h1 class="telugu">బైబిల్ జ్ఞాన పరీక్ష</h1>
+                <p>Online Scripture Test</p>
+            </div>
+        </div>
+        <div id="header-user" style="display: none;">
+            <span class="legend-color answered"
+                style="display: inline-block; width: 8px; height: 8px; border-radius: 50%;"></span>
+            <span id="user-badge-name" style="font-weight: 600; font-size: 0.9rem;"></span>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. WELCOME / REGISTRATION SCREEN -->
+        <section id="welcome-screen" class="screen glass-card welcome-card active">
+            <i class="fa-solid fa-scroll welcome-icon"></i>
+            <h2 class="telugu" style="font-size: 1.8rem; margin-bottom: 0.5rem; color: #fff;">పరిశుద్ధ గ్రంథ పరీక్షకు
+                స్వాగతం</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">కింది వివరాలను నింపి పరీక్షను ప్రారంభించండి.</p>
+
+            <form id="reg-form" onsubmit="event.preventDefault(); startExam();">
+                <div class="form-group">
+                    <label for="user-surname" class="telugu">ఇంటి పేరు (Surname) *</label>
+                    <input type="text" id="user-surname" class="input-field telugu-input" placeholder="ఉదాహరణ: jalli "
+                        required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="user-name" class="telugu">పేరు (First Name) *</label>
+                    <input type="text" id="user-name" class="input-field telugu-input" placeholder="ఉదాహరణ: samuel "
+                        required autocomplete="off">
+                </div>
+
+                <div class="rules-box">
+                    <h3 class="telugu"><i class="fa-solid fa-circle-info"></i> పరీక్షా నియమ నిబంధనలు:</h3>
+                    <ul class="rules-list telugu">
+                        <li><i class="fa-solid fa-chevron-right"></i> మొత్తం ప్రశ్నల సంఖ్య: <strong>260</strong>
+                            (బహుళైచ్ఛిక ప్రశ్నలు)</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> కేటాయించబడిన సమయం: <strong>2 గంటల 30 నిమిషాలు
+                                (2h:30m)</strong></li>
+                        <li><i class="fa-solid fa-chevron-right"></i> ప్రతి పేజీలో 50 ప్రశ్నలు ప్రదర్శించబడతాయి.</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> మీరు ఏదైనా ప్రశ్నకు జవాబును తర్వాత తనిఖీ
+                            చేయాలనుకుంటే "మార్క్" చేసుకోవచ్చు.</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> సమయం ముగిసేసరికి పరీక్ష ఆటోమేటిక్‌గా సబ్మిట్
+                            అవుతుంది.</li>
+                        <li><i class="fa-solid fa-chevron-right"></i> పరీక్ష పూర్తయిన తర్వాత మీ పూర్తి మార్కులు మరియు
+                            వివరాల రిపోర్ట్ చూపబడుతుంది.</li>
+                    </ul>
+                </div>
+                <!-- Host Settings Section -->
+                <div class="rules-box"
+                    style="border-left-color: var(--primary); background: rgba(79, 70, 229, 0.05); padding: 1rem 1.25rem; margin: 1.5rem 0;">
+                    <h3 class="telugu"
+                        style="color: var(--primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 1.1rem; margin-bottom: 0;"
+                        onclick="toggleHostSettings()">
+                        <span><i class="fa-solid fa-user-gear"></i> నిర్వాహకుని అమరికలు (Host Settings)</span>
+                        <span id="host-settings-icon"><i class="fa-solid fa-chevron-down"></i></span>
+                    </h3>
+                    <div id="host-settings-content"
+                        style="display: none; margin-top: 1rem; border-top: 1px dotted rgba(255,255,255,0.1); padding-top: 1rem; text-align: left;">
+                        <div class="form-group" id="host-password-group" style="margin-bottom: 0;">
+                            <label class="telugu"
+                                style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem; display: block;">నిర్వాహకుని
+                                పాస్‌వర్డ్ (Enter Password to Change Time):</label>
+                            <input type="password" id="host-password" class="input-field"
+                                placeholder="పాస్‌వర్డ్ నమోదు చేయండి" style="padding: 0.5rem;"
+                                oninput="checkHostPassword()">
+                        </div>
+                        <div class="form-group" id="host-time-inputs" style="margin-bottom: 0; display: none;">
+                            <label class="telugu"
+                                style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem; display: block;">పరీక్ష
+                                సమయం నిర్ణయించండి (Set Exam Duration):</label>
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="number" id="host-hours" class="input-field" value="1" min="0" max="10"
+                                        style="width: 70px; padding: 0.5rem; text-align: center;">
+                                    <span style="color: var(--text-main); font-size: 0.9rem;">గంటలు (Hrs)</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="number" id="host-minutes" class="input-field" value="40" min="0"
+                                        max="59" style="width: 70px; padding: 0.5rem; text-align: center;">
+                                    <span style="color: var(--text-main); font-size: 0.9rem;">నిమిషాలు (Mins)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Host Results Log -->
+                        <div id="host-results-log"
+                            style="margin-top: 1.5rem; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 1rem;">
+                            <h4 class="telugu"
+                                style="color: var(--accent); font-size: 1rem; margin-bottom: 0.75rem; display: flex; gap: 8px; align-items: center;">
+                                <i class="fa-solid fa-list-check"></i> సమర్పించిన పరీక్షల వివరాలు (Submitted Exam Logs)
+                            </h4>
+                            <div id="host-logs-table-wrapper"
+                                style="max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.25); border-radius: 8px; padding: 0.5rem; border: 1px solid rgba(255,255,255,0.05);">
+                                <table
+                                    style="width: 100%; border-collapse: collapse; font-size: 0.85rem; color: var(--text-main); text-align: left;">
+                                    <thead>
+                                        <tr
+                                            style="border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--text-muted);">
+                                            <th style="padding: 0.4rem;">పేరు (Name)</th>
+                                            <th style="padding: 0.4rem; text-align: center;">మార్కులు (Score)</th>
+                                            <th style="padding: 0.4rem; text-align: center;">సమయం (Time)</th>
+                                            <th style="padding: 0.4rem; text-align: right;">తేదీ (Date)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="host-logs-tbody">
+                                        <!-- Logs populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-secondary telugu" type="button" onclick="clearHostLogs()"
+                                style="margin-top: 0.75rem; font-size: 0.8rem; padding: 0.4rem 0.8rem; border-radius: 4px;">
+                                <i class="fa-solid fa-trash-can"></i> చరిత్రను తొలగించు (Clear Logs)
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-accent btn-large telugu"
+                    style="width: 100%; font-size: 1.2rem; padding: 1rem;">
+                    <i class="fa-solid fa-play"></i> పరీక్షను ప్రారంభించండి (Start Exam)
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. ACTIVE EXAM SCREEN -->
+        <section id="exam-screen" class="screen">
+            <div class="exam-grid">
+                <!-- Question list container (Left) -->
+                <div class="question-panel-wrapper">
+                    <div id="questions-container" class="question-panel telugu">
+                        <!-- Questions dynamically generated here -->
+                    </div>
+
+                    <div class="nav-actions">
+                        <button id="prev-btn" class="btn btn-secondary telugu" onclick="changePage(-1)">
+                            <i class="fa-solid fa-arrow-left"></i> వెనుకకు (Prev)
+                        </button>
+                        <span id="page-indicator" style="font-weight: 600; color: var(--text-muted);">పేజీ 1 / 6</span>
+                        <button id="next-btn" class="btn telugu" onclick="changePage(1)">
+                            తరువాతి (Next) <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button id="last-page-submit-btn" class="btn btn-accent telugu" style="display: none;"
+                            onclick="openSubmitModal()">
+                            <i class="fa-solid fa-circle-check"></i> సమర్పించండి (Submit Exam)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar controls (Right) -->
+                <div class="sidebar-panel">
+                    <!-- Timer Card -->
+                    <div class="timer-card">
+                        <div class="timer-header telugu">మిగిలి ఉన్న సమయం (Time Remaining)</div>
+                        <div id="timer-display" class="timer-display">
+                            <i class="fa-regular fa-clock"></i>
+                            <span id="time-hours">02</span>:<span id="time-minutes">30</span>:<span
+                                id="time-seconds">00</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="timer-progress" class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Palette Card -->
+                    <div class="palette-card">
+                        <h3 class="telugu">
+                            ప్రశ్నల పట్టిక
+                            <span id="palette-progress" class="palette-stats">పూర్తయింది: 0/260</span>
+                        </h3>
+                        <div id="palette-grid" class="palette-grid">
+                            <!-- Buttons 1 to 100 generated here -->
+                        </div>
+                        <div class="palette-legend telugu">
+                            <div class="legend-item">
+                                <div class="legend-color answered"></div>జవాబిచ్చినవి
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color bookmarked"></div>మార్క్ చేసినవి
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color visited"></div>జవాబు లేనివి
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color unvisited"></div>చూడనివి
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. RESULTS DASHBOARD -->
+        <section id="results-screen" class="screen glass-card">
+            <div class="results-hero">
+                <i class="fa-solid fa-award" style="font-size: 4rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                <h2 class="telugu" style="font-size: 2rem; margin-bottom: 0.5rem; color: #fff;">పరీక్షా ఫలితాలు (Exam
+                    Results)</h2>
+                <p style="color: var(--text-muted);">మీరు పరీక్షను విజయవంతంగా పూర్తిచేశారు!</p>
+
+                <div id="score-circle-container" class="score-circle">
+                    <div class="score-value">
+                        <div id="result-score-num" class="score-num">0</div>
+                        <div id="result-score-total" class="score-label">260 కి</div>
+                    </div>
+                </div>
+
+                <h3 id="result-rating" class="telugu"
+                    style="font-size: 1.5rem; color: var(--accent); margin-top: 1rem;"></h3>
+            </div>
+
+            <div class="results-details telugu">
+                <div class="detail-card">
+                    <i class="fa-regular fa-user"></i>
+                    <div class="detail-label">అభ్యర్థి పేరు</div>
+                    <div id="res-full-name" class="detail-value">-</div>
+                </div>
+                <div class="detail-card">
+                    <i class="fa-regular fa-calendar"></i>
+                    <div class="detail-label">తేదీ & సమయం</div>
+                    <div id="res-date-time" class="detail-value">-</div>
+                </div>
+                <div class="detail-card">
+                    <i class="fa-regular fa-hourglass-half"></i>
+                    <div class="detail-label">తీసుకున్న సమయం</div>
+                    <div id="res-time-taken" class="detail-value">-</div>
+                </div>
+                <div class="detail-card">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <div class="detail-label">ఫైర్‌బేస్ స్టేటస్</div>
+                    <div id="res-firebase-status" class="detail-value" style="font-size: 0.85rem;">కనెక్ట్ కాలేదు</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 3rem;">
+                <button class="btn btn-accent telugu" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> రిజల్ట్ ప్రింట్ చేయండి (Print Certificate)
+                </button>
+                <button class="btn btn-secondary telugu" onclick="restartExam()">
+                    <i class="fa-solid fa-rotate-right"></i> తిరిగి రాయండి (Restart)
+                </button>
+            </div>
+
+            <!-- Detail question review list -->
+            <div class="review-section">
+                <h2 class="telugu">
+                    జవాబుల సమీక్ష (Answer Review)
+                    <div class="review-filter">
+                        <button id="filter-all" class="filter-btn active telugu"
+                            onclick="filterReview('all')">అన్నీ</button>
+                        <button id="filter-correct" class="filter-btn telugu"
+                            onclick="filterReview('correct')">సరైనవి</button>
+                        <button id="filter-incorrect" class="filter-btn telugu"
+                            onclick="filterReview('incorrect')">తప్పులు</button>
+                    </div>
+                </h2>
+                <div id="review-list" class="review-list telugu">
+                    <!-- Dynamic review cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PRINT CERTIFICATE CONTAINER -->
+        <div id="print-certificate" class="print-certificate-container">
+            <div class="cert-title">పరీక్ష ధృవీకరణ పత్రము</div>
+            <div class="cert-subtitle">Certificate of Completion</div>
+            <p style="font-size: 1.1rem; color: #4b5563; margin-bottom: 1.5rem;">ఈ క్రింది అభ్యర్థి బైబిల్ జ్ఞాన
+                పరీక్షను విజయవంతంగా పూర్తిచేసినట్లు ధృవీకరించడమైనది:</p>
+            <div id="cert-name" class="cert-recipient">అకుల ప్రిస్కిల్ల</div>
+            <div class="cert-body">
+                వీరు 260 ఆబ్జెక్టివ్ తరహా ప్రశ్నలతో కూడిన <strong>"బైబిల్ జ్ఞాన పరీక్ష"</strong> ను <span
+                    id="cert-date">-</span> వ తేదీన పూర్తిచేసి,<br>
+                <strong>260</strong> మార్కులకు గాను <strong><span id="cert-score">-</span></strong> మార్కులు సాధించి
+                ఉత్తీర్ణత పొందారు.<br>
+                వీరి విజయశాతం: <strong><span id="cert-percent">-</span>%</strong>
+            </div>
+            <div class="cert-footer">
+                <div class="cert-sign">
+                    <div style="width: 150px; border-bottom: 1px solid #9ca3af; margin: 0 auto 0.5rem; height: 30px;">
+                    </div>
+                    <h4>పరీక్షా నిర్వాహకుడు</h4>
+                    <span>Examiner Signature</span>
+                </div>
+                <div class="cert-sign">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;" id="cert-time-taken">-</div>
+                    <h4>వ్యవధి</h4>
+                    <span>Time Taken</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SUBMIT EXAM MODAL DIALOG -->
+    <div id="submit-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <i class="fa-solid fa-circle-question modal-icon"></i>
+            <h3 class="modal-title telugu">పరీక్షను సమర్పించాలా?</h3>
+            <div class="modal-body telugu">
+                మీరు పరీక్ష సమాధాన పత్రాన్ని సబ్మిట్ చేయడానికి సిద్ధంగా ఉన్నారా?<br>
+                సమర్పించిన తర్వాత జవాబులను మార్చలేరు.<br><br>
+                <div style="text-align: left; background: rgba(255,255,255,0.05); padding: 0.8rem; border-radius: 8px;">
+                    <i class="fa-solid fa-check text-success"></i> రాసిన ప్రశ్నలు: <strong id="modal-answered-count"
+                        style="color: var(--success);">0</strong> / 260<br>
+                    <i class="fa-solid fa-bookmark text-primary"></i> రివ్యూ కోసం మార్క్ చేసినవి: <strong
+                        id="modal-bookmark-count" style="color: var(--primary);">0</strong>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary telugu" onclick="closeSubmitModal()">క్యాన్సిల్ (Cancel)</button>
+                <button class="btn btn-accent telugu" onclick="submitExam(false)">అవును, సబ్మిట్ చేయి (Submit)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">
+        <i id="toast-icon" class="fa-solid"></i>
+        <span id="toast-text" class="telugu"></span>
+    </div>
+
+    <script>
+        // ==========================================
+        // FIREBASE CONFIGURATION (ఫైర్‌బేస్ కాన్ఫిగరేషన్)
+        // ==========================================
+        // ఒకవేళ మీరు మీ ఫైర్‌బేస్ డేటాబేస్ కు కనెక్ట్ చేయాలనుకుంటే, క్రింది 'USE_FIREBASE' ని 'true' గా మార్చండి
+        // మరియు మీ ఫైర్‌బేస్ ప్రాజెక్ట్ వివరాలను 'firebaseConfig' లో నింపండి.
+        const USE_FIREBASE = true;
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // ==========================================
+        // QUESTIONS DATA (100 QUESTIONS WITH ANSWERS)
+        // ==========================================
+        const questions = [
+    {
+        "id": 1,
+        "question": "పౌలు ఏథెన్సునుండి బయలుదేరి ______ కు వచ్చెను.",
+        "answer": "కొరింథు",
+        "options": [
+            "ఎఫెసు",
+            "కొరింథు",
+            "అంతియొకయ",
+            "గలతీయ"
+        ]
+    },
+    {
+        "id": 2,
+        "question": "అకుల ఏ వంశానికి చెందినవాడు? ______ .",
+        "answer": "పొంతు",
+        "options": [
+            "లేవి",
+            "బెన్యామీను",
+            "పొంతు",
+            "యూదా"
+        ]
+    },
+    {
+        "id": 3,
+        "question": "అకుల భార్య పేరు ______ .",
+        "answer": "ప్రిస్కిల్ల",
+        "options": [
+            "మరియ",
+            "మార్త",
+            "సప్ఫీరా",
+            "ప్రిస్కిల్ల"
+        ]
+    },
+    {
+        "id": 4,
+        "question": "యూదులందరు రోమా విడిచి వెళ్లాలని ఆజ్ఞాపించిన చక్రవర్తి______ .",
+        "answer": "క్లౌదియ",
+        "options": [
+            "నెరో",
+            "కేసరు",
+            "క్లౌదియ",
+            "హెరోదు"
+        ]
+    },
+    {
+        "id": 5,
+        "question": "అకుల మరియు ప్రిస్కిల్లలు ఇటలీ నుండి ______ గా వచ్చినవారు.",
+        "answer": "క్రొత్త",
+        "options": [
+            "పాత",
+            "క్రొత్త",
+            "దాసులు",
+            "సైనికులు"
+        ]
+    },
+    {
+        "id": 6,
+        "question": "పౌలు, అకుల మరియు ప్రిస్కిల్లల వృత్తి______ కుట్టడం.",
+        "answer": "డేరాలు",
+        "options": [
+            "బట్టలు",
+            "వలలు",
+            "డేరాలు",
+            "చెప్పులు"
+        ]
+    },
+    {
+        "id": 7,
+        "question": "పౌలు ఏ వృత్తి గలవాడు గనుక వారితో కలిసి పనిచేసెను? ______ .",
+        "answer": "డేరాలు కుట్టేవృత్తి",
+        "options": [
+            "చేపలు పట్టే వృత్తి",
+            "వడ్రంగి వృత్తి",
+            "డేరాలు కుట్టేవృత్తి",
+            "వ్యవసాయ వృత్తి"
+        ]
+    },
+    {
+        "id": 8,
+        "question": "పౌలు ప్రతి ______ సమాజమందిరంలో తర్కించేవాడు.",
+        "answer": "విశ్రాంతిదినమున",
+        "options": [
+            "సోమవారమున",
+            "విశ్రాంతిదినమున",
+            "ప్రార్థన దినమున",
+            "పండుగ దినమున"
+        ]
+    },
+    {
+        "id": 9,
+        "question": "పౌలు సమాజమందిరంలో యూదులను మరియు ______ ఒప్పించుచుండెను.",
+        "answer": "గ్రీసు దేశస్థులను",
+        "options": [
+            "సమరయులను",
+            "ఐగుప్తీయులను",
+            "రోమీయులను",
+            "గ్రీసు దేశస్థులను"
+        ]
+    },
+    {
+        "id": 10,
+        "question": "మాసిదోనియ నుండి సీలయు, ______ వచ్చినప్పుడు పౌలు వాక్యము బోధించుటలో ఆతురత పడెను.",
+        "answer": "తిమోతి",
+        "options": [
+            "తిమోతి",
+            "లూకా",
+            "తీతు",
+            "బర్నబా"
+        ]
+    },
+    {
+        "id": 11,
+        "question": "యేసే ______ అని పౌలు యూదులకు దృఢముగా సాక్ష్యమిచ్చెను.",
+        "answer": "క్రీస్తు",
+        "options": [
+            "ప్రవక్త",
+            "బోధకుడు",
+            "క్రీస్తు",
+            "రాజు"
+        ]
+    },
+    {
+        "id": 12,
+        "question": "యూదులు ఎదురాడి దూషించినప్పుడు పౌలు తన ______ దులుపుకొనెను.",
+        "answer": "వస్త్రములు",
+        "options": [
+            "చేతులు",
+            "వస్త్రములు",
+            "పాదములు",
+            "తల"
+        ]
+    },
+    {
+        "id": 13,
+        "question": "పౌలు తన వస్త్రములు దులుపుకొని \"మీ నాశనమునకు ______ ఉత్తరవాదులు\" అనెను.",
+        "answer": "మీరే",
+        "options": [
+            "రోమీయులే",
+            "నేనే",
+            "ప్రవక్తలే",
+            "మీరే"
+        ]
+    },
+    {
+        "id": 14,
+        "question": "ఇకమీదట పౌలు ఎవరి యొద్దకు పోవుదునని చెప్పెను? ______ .",
+        "answer": "అన్యజనుల",
+        "options": [
+            "యూదుల",
+            "అన్యజనుల",
+            "యాజకుల",
+            "పరిసయ్యుల"
+        ]
+    },
+    {
+        "id": 15,
+        "question": "పౌలు దేవునియందు భక్తిగల ______ అను ఒకని ఇంటికి వెళ్లెను.",
+        "answer": "తీతియు యూస్తు",
+        "options": [
+            "సిమ్యోను",
+            "కొర్నేలియు",
+            "తీతియు యూస్తు",
+            "అగబు"
+        ]
+    },
+    {
+        "id": 16,
+        "question": "తీతియు యూస్తు ఇల్లు దేనికి ఆనుకొని ఉండెను? ______ .",
+        "answer": "సమాజమందిరమును",
+        "options": [
+            "రాజుగారి కోటకు",
+            "సమాజమందిరమును",
+            "చెరసాలకు",
+            "దేవాలయమునకు"
+        ]
+    },
+    {
+        "id": 17,
+        "question": "సమాజమందిరపు అధికారియైన ______ తన ఇంటివారందరితో ప్రభువునందు విశ్వాసముంచెను.",
+        "answer": "క్రిస్పు",
+        "options": [
+            "క్రిస్పు",
+            "గాయు",
+            "ఎరస్తు",
+            "సోస్తెనేసు"
+        ]
+    },
+    {
+        "id": 18,
+        "question": "రాత్రివేళ దర్శనమందు ప్రభువు పౌలుతో \"నీవు ______ మాటలాడుము\" అనెను.",
+        "answer": "భయపడక",
+        "options": [
+            "ఆగిపోక",
+            "కోపపడక",
+            "భయపడక",
+            "రహస్యముగా"
+        ]
+    },
+    {
+        "id": 19,
+        "question": "\"ఈ పట్టణములో నాకు ______ ఉన్నది\" అని ప్రభువు పౌలుతో చెప్పెను.",
+        "answer": "బహు జనము",
+        "options": [
+            "గొప్ప కోట",
+            "శత్రువులు",
+            "బంగారము",
+            "బహు జనము"
+        ]
+    },
+    {
+        "id": 20,
+        "question": "పౌలు కొరింథులో ఎన్ని రోజులు నివసించెను? ______ .",
+        "answer": "ఒక సంవత్సరము ఆరు నెలలు",
+        "options": [
+            "మూడు సంవత్సరములు",
+            "నలభై రోజులు",
+            "ఒక సంవత్సరము ఆరు నెలలు",
+            "రెండు సంవత్సరములు"
+        ]
+    },
+    {
+        "id": 21,
+        "question": "దేవుడు ఎవరిని పరిశోధించుటకై \"అబ్రాహామా\" అని పిలిచెను? ______ .",
+        "answer": "అబ్రాహామును",
+        "options": [
+            "ఇస్సాకును",
+            "అబ్రాహామును",
+            "యాకోబును",
+            "నోవహును"
+        ]
+    },
+    {
+        "id": 22,
+        "question": "అబ్రాహాముతన కుమారుడైన ఇస్సాకును ఏ దేశమునకు తీసికొని వెళ్లవలెను? ______ .",
+        "answer": "మోరీయా దేశమునకు",
+        "options": [
+            "కనాను దేశమునకు",
+            "ఐగుప్తు దేశమునకు",
+            "మోరీయా దేశమునకు",
+            "మిద్యాను దేశమునకు"
+        ]
+    },
+    {
+        "id": 23,
+        "question": "ఇస్సాకును ఏ బలిగా అర్పించాలని దేవుడు అబ్రాహాముతో చెప్పెను? ______ .",
+        "answer": "దహనబలిగా",
+        "options": [
+            "సమాధానబలిగా",
+            "దహనబలిగా",
+            "పాపపరిహారార్థబలిగా",
+            "నైవేద్యముగా"
+        ]
+    },
+    {
+        "id": 24,
+        "question": "అబ్రాహాము తెల్లవారినప్పుడు లేచి దేనికి గంత కట్టెను? ______ .",
+        "answer": "తన గాడిదకు",
+        "options": [
+            "తన ఒంటెకు",
+            "తన గుర్రమునకు",
+            "తన ఎద్దుకు",
+            "తన గాడిదకు"
+        ]
+    },
+    {
+        "id": 25,
+        "question": "అబ్రాహాము తన వెంట ఎంతమంది పనివారిని తీసికొని వెళ్లెను? ______ .",
+        "answer": "ఇద్దరిని",
+        "options": [
+            "నలుగురిని",
+            "ఇద్దరిని",
+            "ఐదుగురిని",
+            "పదిమందిని"
+        ]
+    },
+    {
+        "id": 26,
+        "question": "అబ్రాహాము ఎన్నవ నాడు కన్నులెత్తి దూరమునుండి ఆ చోటును చూచెను? ______ .",
+        "answer": "మూడవ నాడు",
+        "options": [
+            "ఏడవ నాడు",
+            "మొదటి నాడు",
+            "మూడవ నాడు",
+            "ఐదవ నాడు"
+        ]
+    },
+    {
+        "id": 27,
+        "question": "అబ్రాహాము దహనబలికి కట్టెలను ఎవరి మీద పెట్టెను? ______ .",
+        "answer": "తన కుమారుడగు ఇస్సాకు మీద",
+        "options": [
+            "తన పనివారి మీద",
+            "తన కుమారుడగు ఇస్సాకు మీద",
+            "గాడిద మీద",
+            "తన భుజము మీద"
+        ]
+    },
+    {
+        "id": 28,
+        "question": "అబ్రాహాము తన చేతితో వేటిని పట్టుకొని పోయెను? ______ .",
+        "answer": "నిప్పును",
+        "options": [
+            "నీళ్లను",
+            "కట్టెలను",
+            "నిప్పును",
+            "నూనెను"
+        ]
+    },
+    {
+        "id": 29,
+        "question": "\"నిప్పును కట్టెలును ఉన్నవి గాని దహనబలికి ______ ఏది?\" అని ఇస్సాకు అడిగెను.",
+        "answer": "గొఱ్ఱపిల్ల",
+        "options": [
+            "ఎద్దు",
+            "గొఱ్ఱపిల్ల",
+            "పొట్టేలు",
+            "పావురము"
+        ]
+    },
+    {
+        "id": 30,
+        "question": "\"కుమారుడా, దేవుడే దహనబలికి గొఱ్ఱపిల్లను ______ \" అని అబ్రాహాము చెప్పెను.",
+        "answer": "చూచుకొనును",
+        "options": [
+            "పంపును",
+            "సిద్ధపరచును",
+            "చూచుకొనును",
+            "దాచును"
+        ]
+    },
+    {
+        "id": 31,
+        "question": "దేవుడు చెప్పిన చోటికి వచ్చినప్పుడు అబ్రాహాము అక్కడ దేనిని కట్టెను? ______ .",
+        "answer": "బలిపీఠమును",
+        "options": [
+            "గుడారమును",
+            "కోటను",
+            "గోడను",
+            "బలిపీఠమును"
+        ]
+    },
+    {
+        "id": 32,
+        "question": "అబ్రాహాము తన కుమారుని బంధించి దేని మీద ఉంచెను? ______ .",
+        "answer": "పీఠముపైనున్న కట్టెలమీద",
+        "options": [
+            "నేల మీద",
+            "రాయి మీద",
+            "పీఠముపైనున్న కట్టెలమీద",
+            "చాప మీద"
+        ]
+    },
+    {
+        "id": 33,
+        "question": "తన కుమారుని వధించుటకు అబ్రాహాము దేనిని పట్టుకొనెను? ______ .",
+        "answer": "కత్తిని",
+        "options": [
+            "ఈటెను",
+            "కత్తిని",
+            "గొడ్డలిని",
+            "విల్లును"
+        ]
+    },
+    {
+        "id": 34,
+        "question": "పరలోకమునుండి అబ్రాహామును పిలిచినది ఎవరు? ______ .",
+        "answer": "యెహోవా దూత",
+        "options": [
+            "మోషే",
+            "ఇస్సాకు",
+            "సారమ్మ",
+            "యెహోవా దూత"
+        ]
+    },
+    {
+        "id": 35,
+        "question": "\"నీవు దేవునికి ______ అని ఇందువలన నాకు తెలియును\" అని దూత చెప్పెను.",
+        "answer": "భయపడువాడవని",
+        "options": [
+            "కోపగించువాడవని",
+            "అర్పించువాడవని",
+            "భయపడువాడవని",
+            "ప్రార్థించువాడవని"
+        ]
+    },
+    {
+        "id": 36,
+        "question": "అబ్రాహాము కన్నులెత్తిచూడగా పొదలో కొమ్ములు తగులుకొని ఉన్న ఏది కనబడెను? ______ .",
+        "answer": "పొట్టేలు",
+        "options": [
+            "మేక",
+            "పొట్టేలు",
+            "ఆవు",
+            "జింక"
+        ]
+    },
+    {
+        "id": 37,
+        "question": "అబ్రాహాము తన కుమారునికి మారుగా దేనిని దహనబలిగా అర్పించెను? ______ .",
+        "answer": "పొట్టేలును",
+        "options": [
+            "గొఱ్ఱపిల్లను",
+            "దూడను",
+            "పొట్టేలును",
+            "గువ్వను"
+        ]
+    },
+    {
+        "id": 38,
+        "question": "అబ్రాహాము ఆ చోటికి ఏమని పేరు పెట్టెను? ______ .",
+        "answer": "యెహోవా యీరే",
+        "options": [
+            "యెహోవా నిస్సి",
+            "యెహోవా యీరే",
+            "యెహోవా శాలేము",
+            "బెతేలు"
+        ]
+    },
+    {
+        "id": 39,
+        "question": "\"యెహోవా పర్వతము మీద ______ \" అని నేటి వరకు చెప్పబడును.",
+        "answer": "చూచుకొనును",
+        "options": [
+            "ప్రార్థింతురు",
+            "బలి అర్పింతురు",
+            "చూచుకొనును",
+            "దిగివచ్చును"
+        ]
+    },
+    {
+        "id": 40,
+        "question": "యెహోవా దూత ______ మారు పరలోకము నుండి అబ్రాహామును పిలిచెను.",
+        "answer": "రెండవ",
+        "options": [
+            "మొదటి",
+            "మూడవ",
+            "నాల్గవ",
+            "రెండవ"
+        ]
+    },
+    {
+        "id": 41,
+        "question": "దమస్కులో ఉన్న ఒక శిష్యుని పేరు ______ .",
+        "answer": "అననీయ",
+        "options": [
+            "సప్ఫీరా",
+            "అననీయ",
+            "సీల",
+            "బర్నబా"
+        ]
+    },
+    {
+        "id": 42,
+        "question": "ప్రభువు దర్శనమందు అననీయను ఏమని పిలిచెను? ______ .",
+        "answer": "అననీయా",
+        "options": [
+            "దాసుడా",
+            "ప్రవక్తా",
+            "అననీయా",
+            "నా కుమారుడా"
+        ]
+    },
+    {
+        "id": 43,
+        "question": "ప్రభువు అననీయను ఏ వీధికి వెళ్ళమని చెప్పెను? ______ .",
+        "answer": "తిన్ననిదనబడిన వీధి",
+        "options": [
+            "విశాలమైన వీధి",
+            "పాత వీధి",
+            "తిన్ననిదనబడిన వీధి",
+            "తూర్పు వీధి"
+        ]
+    },
+    {
+        "id": 44,
+        "question": "తిన్నని వీధిలో ఎవరి ఇంటికి వెళ్ళమని ప్రభువు చెప్పెను? ______ .",
+        "answer": "యూదా అనువాని ఇంటికి",
+        "options": [
+            "సీమోను ఇంటికి",
+            "యూదా అనువాని ఇంటికి",
+            "లూకా ఇంటికి",
+            "పౌలు ఇంటికి"
+        ]
+    },
+    {
+        "id": 45,
+        "question": "సౌలు ఏ ఊరివాడు? ______ .",
+        "answer": "తార్సువాడు",
+        "options": [
+            "యెరూషలేమువాడు",
+            "అంటియొకయవాడు",
+            "నజరేతువాడు",
+            "తార్సువాడు"
+        ]
+    },
+    {
+        "id": 46,
+        "question": "అననీయ వెళ్ళే సమయానికి సౌలు అక్కడ ఏమి చేయుచున్నాడు? ______ .",
+        "answer": "ప్రార్థన చేయుచున్నాడు",
+        "options": [
+            "నిద్రపోవుచున్నాడు",
+            "ప్రార్థన చేయుచున్నాడు",
+            "భోజనము చేయుచున్నాడు",
+            "గ్రంథము చదువుచున్నాడు"
+        ]
+    },
+    {
+        "id": 47,
+        "question": "సౌలు దర్శనంలో ఎవరు తన తలమీద చేతులు ఉంచడం చూసెను? ______ .",
+        "answer": "అననీయ అను మనుష్యుడు",
+        "options": [
+            "పేతురు",
+            "ఒక దేవదూత",
+            "అననీయ అను మనుష్యుడు",
+            "యోహాను"
+        ]
+    },
+    {
+        "id": 48,
+        "question": "సౌలు ఎక్కడ ఉన్న పరిశుద్ధులకు ఎంతో కీడు చేసెను? ______ .",
+        "answer": "యెరూషలేములో",
+        "options": [
+            "సమరయలో",
+            "గలిలయలో",
+            "యాఫాలో",
+            "యెరూషలేములో"
+        ]
+    },
+    {
+        "id": 49,
+        "question": "సౌలు ఎవరి వలన విశ్వాసులను బంధించుటకు అధికారము పొందెను? ______ .",
+        "answer": "ప్రధానయాజకుల వలన",
+        "options": [
+            "రోమా ప్రభుత్వము వలన",
+            "హేరోదు రాజు వలన",
+            "ప్రధానయాజకుల వలన",
+            "సమాజమందిరపు అధికారుల వలన"
+        ]
+    },
+    {
+        "id": 50,
+        "question": "సౌలు ఎవరి నామమును భరించుటకు ఏర్పరచుకొనిన సాధనమై ఉన్నాడు? ______ .",
+        "answer": "ప్రభువు నామమును",
+        "options": [
+            "తన సొంత నామమును",
+            "ప్రభువు నామమును",
+            "పరిసయ్యుల నామమును",
+            "ధర్మశాస్త్రము నామమును"
+        ]
+    },
+    {
+        "id": 51,
+        "question": "ప్రభువు సౌలును ఎవరి యెదుట సాక్ష్యమిచ్చుటకు ఏర్పరచుకొనెను? (అన్యజనుల, రాజుల మరియు ______ ).",
+        "answer": "ఇశ్రాయేలీయుల",
+        "options": [
+            "పరిసయ్యుల",
+            "ఇశ్రాయేలీయుల",
+            "లేవీయుల",
+            "సద్దూకయ్యుల"
+        ]
+    },
+    {
+        "id": 52,
+        "question": "సౌలు ప్రభువు నామము కొరకు ఏమి అనుభవింపవలెనని ప్రభువు చెప్పెను? ______ .",
+        "answer": "శ్రమలను",
+        "options": [
+            "సుఖములను",
+            "ఘనతను",
+            "శ్రమలను",
+            "ఐశ్వర్యమును"
+        ]
+    },
+    {
+        "id": 53,
+        "question": "అననీయ సౌలును ఏమని పిలిచెను? ______ .",
+        "answer": "సౌలా",
+        "options": [
+            "తార్సు వాడా",
+            "దేవుని శత్రువా",
+            "పాపియా",
+            "సౌలా"
+        ]
+    },
+    {
+        "id": 54,
+        "question": "సౌలు మార్గములో ఎవరిని చూసెను? ______ .",
+        "answer": "प्रभुవైన యేసును",
+        "options": [
+            "మోషేను",
+            "ఏలీయాను",
+            "प्रभुవైన యేసును",
+            "దేవదూతను"
+        ]
+    },
+    {
+        "id": 55,
+        "question": "సౌలు దేనితో నింపబడునట్లు అననీయ పంపబడెను? ______ .",
+        "answer": "పరిశుద్ధాత్మతో",
+        "options": [
+            "జ్ఞానముతో",
+            "పరిశుద్ధాత్మతో",
+            "ధైర్యముతో",
+            "సంతోషముతో"
+        ]
+    },
+    {
+        "id": 56,
+        "question": "అననీయ సౌలు మీద చేతులుంచగానే అతని కన్నుల నుండి ఏమి రాలెను? ______ .",
+        "answer": "పొరలవంటివి",
+        "options": [
+            "కన్నీళ్లు",
+            "రక్తం",
+            "పొరలవంటివి",
+            "ఇసుక"
+        ]
+    },
+    {
+        "id": 57,
+        "question": "పొరలు రాలగానే సౌలుకు ఏమి కలిగెను? ______ .",
+        "answer": "दृष्टि",
+        "options": [
+            "శక్తి",
+            "జ్ఞానము",
+            "శాంతి",
+            "दृष्टि"
+        ]
+    },
+    {
+        "id": 58,
+        "question": "సౌలు దృష్టి పొందిన తర్వాత ఏమి పొందెను? ______ .",
+        "answer": "బాప్తిస్మము",
+        "options": [
+            "బాప్తిస్మము",
+            "ఆహారము",
+            "బహుమతి",
+            "అధికారము"
+        ]
+    },
+    {
+        "id": 59,
+        "question": "సౌలు దేనిని పుచ్చుకొని బలపడెను? ______ .",
+        "answer": "ఆహారమును",
+        "options": [
+            "పానీయమును",
+            "వాక్యమును",
+            "ఆహారమును",
+            "రొట్టెను"
+        ]
+    },
+    {
+        "id": 60,
+        "question": "సౌలు దర్శనంలో అననీయ తన మీద చేతులు ఉంచుట దేనికోసం చూసెను? ______ .",
+        "answer": "దృష్టి పొందునట్లు",
+        "options": [
+            "స్వస్థత పొందునట్లు",
+            "దృష్టి పొందునట్లు",
+            "పరిశుద్ధాత్మ పొందునట్లు",
+            "దీవెన పొందునట్లు"
+        ]
+    },
+    {
+        "id": 61,
+        "question": "దానియేలు తన ఇంటికి వెళ్లి ఎవరికి సంగతి తెలియజేసెను? ______ .",
+        "answer": "తన స్నేహితులకు",
+        "options": [
+            "తన తల్లిదండ్రులకు",
+            "రాజుగారికి",
+            "తన స్నేహితులకు",
+            "మంత్రులకు"
+        ]
+    },
+    {
+        "id": 62,
+        "question": "దానియేలు స్నేహితులలో మొదటివాడు ______ .",
+        "answer": "హనన్యా",
+        "options": [
+            "అజర్యా",
+            "హనన్యా",
+            "మిషాయేలు",
+            "నెబుకద్నెజరు"
+        ]
+    },
+    {
+        "id": 63,
+        "question": "దానియేలు రెండవ స్నేహితుని పేరు ______ .",
+        "answer": "మిషాయేలు",
+        "options": [
+            "హనన్యా",
+            "అజర్యా",
+            "బేల్తెషాజరు",
+            "మిషాయేలు"
+        ]
+    },
+    {
+        "id": 64,
+        "question": "దానియేలు మూడవ స్నేహితుని పేరు ______ .",
+        "answer": "అజర్యా",
+        "options": [
+            "హనన్యా",
+            "మిషాయేలు",
+            "అజర్యా",
+            "దర్యావేషు"
+        ]
+    },
+    {
+        "id": 65,
+        "question": "దానియేలు మరియు అతని స్నేహితులు ఎక్కడి జ్ఞానులతో కలిసి నశించకూడదని కోరుకున్నారు? ______ .",
+        "answer": "బబులోను",
+        "options": [
+            "యెరూషలేము",
+            "బబులోను",
+            "పారసీక",
+            "ఐగుప్తు"
+        ]
+    },
+    {
+        "id": 66,
+        "question": "వారు దేని విషయమై దేవుని కటాక్షము కోరారు? ______ .",
+        "answer": "కలయొక్క మర్మము",
+        "options": [
+            "సంపద",
+            "కలయొక్క మర్మము",
+            "దీర్ఘాయువు",
+            "జ్ఞానము"
+        ]
+    },
+    {
+        "id": 67,
+        "question": "వారు ఎవరిని వేడుకొనవలెనని దానియేలు హెచ్చరించెను? ______ .",
+        "answer": "పరలోకమందున్న దేవుని",
+        "options": [
+            "నెబుకద్నెజరు రాజును",
+            "బబులోను దేవతలను",
+            "ప్రధానులను",
+            "పరలోకమందున్న దేవుని"
+        ]
+    },
+    {
+        "id": 68,
+        "question": "ఆ మర్మము దానియేలుకు ఏ సమయంలో బయలుపరచబడెను? ______ .",
+        "answer": "రాత్రియందు",
+        "options": [
+            "పగటియందు",
+            "ఉదయకాలమున",
+            "రాత్రియందు",
+            "సాయంత్రమున"
+        ]
+    },
+    {
+        "id": 69,
+        "question": "దేవుడు దానియేలుకు ఆ మర్మమును దేని ద్వారా తెలియజేసెను? ______ .",
+        "answer": "దర్శనముచేత",
+        "options": [
+            "కల ద్వారా",
+            "ఒక దూత ద్వారా",
+            "దర్శనముచేత",
+            "ఆకాశవాణి ద్వారా"
+        ]
+    },
+    {
+        "id": 70,
+        "question": "మర్మము తెలిసిన తర్వాత దానియేలు ఎవరిని స్తుతించెను? ______ .",
+        "answer": "పరలోకమందున్న దేవుని",
+        "options": [
+            "రాజును",
+            "తన స్నేహితులను",
+            "సైన్యాధిపతిని",
+            "పరలోకమందున్న దేవుని"
+        ]
+    },
+    {
+        "id": 71,
+        "question": "దేవుడు వేటిని కలవాడని దానియేలు స్తుతించెను? ______ మరియు ______ .",
+        "answer": "జ్ఞానబలములు",
+        "options": [
+            "ఐశ్వర్యము",
+            "జ్ఞానబలములు",
+            "కరుణ",
+            "కోపము"
+        ]
+    },
+    {
+        "id": 72,
+        "question": "ఎవరి నామము యుగములన్నిటను స్తుతినొందును గాక? ______ .",
+        "answer": "దేవుని నామము",
+        "options": [
+            "రాజు నామము",
+            "దానియేలు నామము",
+            "దేవుని నామము",
+            "దేవదూత నామము"
+        ]
+    },
+    {
+        "id": 73,
+        "question": "కాలములను సమయములను ______ వాడై దేవుడు ఉన్నాడు.",
+        "answer": "మార్చువాడై",
+        "options": [
+            "ఆపువాడై",
+            "మార్చువాడై",
+            "సృష్టించువాడై",
+            "మరుచువాడై"
+        ]
+    },
+    {
+        "id": 74,
+        "question": "రాజులను త్రోసివేయుచు, ______ వాడు దేవుడే.",
+        "answer": "నియమించుచున్నవాడు",
+        "options": [
+            "చంపుచున్నవాడు",
+            "శిక్షించుచున్నవాడు",
+            "నియమించుచున్నవాడు",
+            "హెచ్చరించుచున్నవాడు"
+        ]
+    },
+    {
+        "id": 75,
+        "question": "దేవుడు ఎవరికి విവേకమును అనుగ్రహించువాడు? ______ .",
+        "answer": "వివేకులకు",
+        "options": [
+            "రాజులకు",
+            "వివేకులకు",
+            "జ్ఞానులకు",
+            "ధనికులకు"
+        ]
+    },
+    {
+        "id": 76,
+        "question": "దేవుడు జ్ఞానులకు దేనిని అనుగ్రహించును? ______ .",
+        "answer": "జ్ఞానమును",
+        "options": [
+            "ఐశ్వర్యమును",
+            "బలమును",
+            "కీర్తిని",
+            "జ్ఞానమును"
+        ]
+    },
+    {
+        "id": 77,
+        "question": "ఆయన వేటిని బయలుపరచువాడు? ______ మరియు ______ .",
+        "answer": "మరుగుమాటలను",
+        "options": [
+            "శత్రువులను",
+            "భూమిని",
+            "మరుగుమాటలను",
+            "పాపమును"
+        ]
+    },
+    {
+        "id": 78,
+        "question": "ఏ చోట ఉన్న సంగతులు దేవునికి తెలియును? ______ .",
+        "answer": "అంధకారములోని",
+        "options": [
+            "వెలుగులోని",
+            "పరలోకములోని",
+            "అంధకారములోని",
+            "సмуద్రములోని"
+        ]
+    },
+    {
+        "id": 79,
+        "question": "వెలుగుయొక్క నివాసస్థలము ఎవరి యొద్ద ఉన్నది? ______ .",
+        "answer": "దేవుని యొద్ద",
+        "options": [
+            "సూర్యుని యొద్ద",
+            "రాజు యొద్ద",
+            "మనుష్యుల యొద్ద",
+            "దేవుని యొద్ద"
+        ]
+    },
+    {
+        "id": 80,
+        "question": "దానియేలు తన స్నేహితులను దేని నిమిత్తమై వేడుకొనమని చెప్పెను? ______ .",
+        "answer": "కటాక్షము పొందు నిమిత్తమై",
+        "options": [
+            "జ్ఞానము పొందు నిమిత్తమై",
+            "కటాక్షము పొందు నిమిత్తమై",
+            "విడుదల పొందు నిమిత్తమై",
+            "బహుమతి పొందు నిమిత్తమై"
+        ]
+    },
+    {
+        "id": 81,
+        "question": "దర్యావేషు తన రాజ్యముపై ఎంతమంది అధిపతులను నియమించెను? ______ .",
+        "answer": "120 మందిని",
+        "options": [
+            "70 మందిని",
+            "120 మందిని",
+            "100 మందిని",
+            "150 మందిని"
+        ]
+    },
+    {
+        "id": 82,
+        "question": "అధిపతుల పైన రాజు ఎంతమంది ప్రధానులను నియమించెను? ______ .",
+        "answer": "ముగ్గురిని",
+        "options": [
+            "ఇద్దరిని",
+            "నలుగురిని",
+            "ముగ్గురిని",
+            "ఐదుగురిని"
+        ]
+    },
+    {
+        "id": 83,
+        "question": "ముగ్గురు ప్రధానులలో ముఖ్యుడు ఎవరు? ______ .",
+        "answer": "దానియేలు",
+        "options": [
+            "హనన్యా",
+            "అజర్యా",
+            "మిషాయేలు",
+            "దానియేలు"
+        ]
+    },
+    {
+        "id": 84,
+        "question": "దానియేలు ఎటువంటి బుద్ధి గలవాడై ప్రఖ్యాతి నొందెను? ______ .",
+        "answer": "అతిశ్రేష్ఠమైన బుద్ధి",
+        "options": [
+            "సామాన్యమైన బుద్ధి",
+            "అతిశ్రేష్ఠమైన బుద్ధి",
+            "లోకసంబంధమైన బుద్ధి",
+            "కుటిలమైన బుద్ధి"
+        ]
+    },
+    {
+        "id": 85,
+        "question": "దానియేలు మీద నింద మోపుటకు వారు దేని విషయమై తగిన హేతువు కనిపెట్టిరి? ______ .",
+        "answer": "రాజ్యపాలన విషయములో",
+        "options": [
+            "అతని ఆహార విషయములో",
+            "రాజ్యపాలన విషయములో",
+            "అతని ప్రార్థన విషయములో",
+            "అతని వంశ విషయములో"
+        ]
+    },
+    {
+        "id": 86,
+        "question": "దానియేలులో ఏ తప్పయినను, లోపమయినను కనుగొనలేకపోవుటకు కారణం ఏమిటి? ______ .",
+        "answer": "అతడు నమ్మకస్థుడు గనుక",
+        "options": [
+            "అతడు రాజుకు బంధువు గనుక",
+            "అతడు భయపడ్డాడు గనుక",
+            "అతడు నమ్మకస్థుడు గనుక",
+            "అతడు జ్ఞాని గనుక"
+        ]
+    },
+    {
+        "id": 87,
+        "question": "దానియేలులో లోపము కేవలం దేని విషయమందే కనుగొనగలమని వారు అనుకొనిరి? ______ .",
+        "answer": "అతని దేవుని పద్ధతి విషయమందే",
+        "options": [
+            "అతని రాజ్యపాలన విషయమందే",
+            "అతని నడక విషయమందే",
+            "అతని దేవుని పద్ధతి విషయమందే",
+            "అతని స్నేహితుల విషయమందే"
+        ]
+    },
+    {
+        "id": 88,
+        "question": "ఎన్ని దినముల వరకు రాజు యొద్దతప్ప మరి ఎవరి యొద్ద మనవి చేయకూడదని శాసనము చేసిరి? ______",
+        "answer": "30 దినముల వరకు",
+        "options": [
+            "7 దినముల వరకు",
+            "40 దినముల వరకు",
+            "30 దినముల వరకు",
+            "10 దినముల వరకు"
+        ]
+    },
+    {
+        "id": 89,
+        "question": "రాజుకు కాకుండా వేరే ఎవరికి మనవి చేసినా వారిని ఎక్కడ పడద్రోయవలెను? ______ .",
+        "answer": "సింహముల గుహలో",
+        "options": [
+            "అగ్నిగుండములో",
+            "సింహముల గుహలో",
+            "చెరసాలలో",
+            "సముద్రములో"
+        ]
+    },
+    {
+        "id": 90,
+        "question": "ఏ ఏ దేశస్తుల పద్ధతి ననుసరించి ఈ శాసనము మార్చబడదు? ______ మరియు ______ .",
+        "answer": "మాదీయుల",
+        "options": [
+            "ఐగుప్తీయుల",
+            "మాదీయుల",
+            "యూదుల",
+            "గ్రీసు"
+        ]
+    },
+    {
+        "id": 91,
+        "question": "శాసనము సంతకము చేయబడినట్లు తెలిసినా దానియేలు అనుదినము ఎన్నిసార్లుప్రార్థన చేసెను? ______ .",
+        "answer": "ముమ్మారు",
+        "options": [
+            "ఒక్కసారి",
+            "ఇరుమారు",
+            "ఏడుసార్లు",
+            "ముమ్మారు"
+        ]
+    },
+    {
+        "id": 92,
+        "question": "ప్రార్థన చేయునప్పుడు దానియేలు కిటికీలు ఏ పట్టణము తట్టునకు తెరవబడి ఉండెను? ______ .",
+        "answer": "యెరూషలేము",
+        "options": [
+            "బబులోను",
+            "యెరూషలేము",
+            "సమరయ",
+            "నజరేతు"
+        ]
+    },
+    {
+        "id": 93,
+        "question": "దానియేలును రక్షించాలని రాజు ఏ సమయం వరకు ప్రయత్నము చేసెను? ______ .",
+        "answer": "సూర్యుడు అస్తమించువరకు",
+        "options": [
+            "మధ్యాహ్నం వరకు",
+            "అర్ధరాత్రి వరకు",
+            "సూర్యుడు అస్తమించువరకు",
+            "మరుసటి రోజు వరకు"
+        ]
+    },
+    {
+        "id": 94,
+        "question": "దానియేలును సింహాల గుహలో పడద్రోసినప్పుడు రాజు అతనితో ఏమని అనెను? ______ .",
+        "answer": "నీ దేవుడే నిన్ను రక్షించును",
+        "options": [
+            "నీవు చనిపోవుదువు",
+            "నీ దేవుడే నిన్ను రక్షించును",
+            "నీ జ్ఞానము నిన్ను రక్షించును",
+            "నిన్ను ఎవరు రక్షించలేరు"
+        ]
+    },
+    {
+        "id": 95,
+        "question": "గుహ ద్వారమును దేనితో మూసి రాజు ముద్ర వేసెను? ______ .",
+        "answer": "ఒక రాయి తీసికొని వచ్చి",
+        "options": [
+            "ఇనుప తలుపుతో",
+            "ఒక రాయి తీసికొని వచ్చి",
+            "కట్టెలతో",
+            "మట్టితో"
+        ]
+    },
+    {
+        "id": 96,
+        "question": "దానియేలును గుహలో వేసిన రాత్రి రాజు ఏ స్థితిలో ఉండెను? ______ .",
+        "answer": "ఉపవాసముండి నిద్రలేక ఉండెను",
+        "options": [
+            "విందు చేసి సంతోషముగా ఉండెను",
+            "ఉపవాసముండి నిద్రలేక ఉండెను",
+            "సైన్యముతో యుద్ధమునకు వెళ్లెను",
+            "సుఖముగా నిద్రించెను"
+        ]
+    },
+    {
+        "id": 97,
+        "question": "తెల్లవారుజామున రాజు గుహ దగ్గరకు వచ్చి దానియేలును ఏ స్వరముతో పిలిచెను? ______ .",
+        "answer": "దుఃఖ స్వరముతో",
+        "options": [
+            "కోప స్వరముతో",
+            "సంతోష స్వరముతో",
+            "గంభీర స్వరముతో",
+            "దుఃఖ స్వరముతో"
+        ]
+    },
+    {
+        "id": 98,
+        "question": "సింహాలు హాని చేయకుండ దేవుడు ఎవరిని పంపించి వాటి నోళ్లుమూయించెను? ______ .",
+        "answer": "తన దూతను",
+        "options": [
+            "ఒక ప్రవక్తను",
+            "ఒక వేటగాడిని",
+            "తన దూతను",
+            "దానియేలు స్నేహితులను"
+        ]
+    },
+    {
+        "id": 99,
+        "question": "దానియేలుకు ఏ హానియు కలుగకపోవడానికి ప్రధాన కారణం ఏమిటి? ______ .",
+        "answer": "తన దేవుని యందు భక్తిగలవాడైనందున",
+        "options": [
+            "సింహాలకు ఆకలి లేనందున",
+            "రాజు రక్షించినందున",
+            "గుహ పెద్దదిగా ఉన్నందున",
+            "తన దేవుని యందు భక్తిగలవాడైనందున"
+        ]
+    },
+    {
+        "id": 100,
+        "question": "దానియేలు మీద నింద మోపిన వారిని మరియు వారి కుటుంబాలను ఎక్కడ పడద్రోసిరి? ______ .",
+        "answer": "సింహముల గుహలో",
+        "options": [
+            "అగ్నిగుండములో",
+            "కారాగారములో",
+            "సింహముల గుహలో",
+            "అగాధములో"
+        ]
+    },
+    {
+        "id": 101,
+        "question": "దావీదుకు కుమారులు ఎక్కడ పుట్టిరి? ______ .",
+        "answer": "హెబ్రోనులో",
+        "options": [
+            "బెత్లెహేములో",
+            "హెబ్రోనులో",
+            "యెరూషలేములో",
+            "గిబియాలో"
+        ]
+    },
+    {
+        "id": 102,
+        "question": "దావీదు యొక్క జ్యేష్ఠపుత్రుడు (పెద్దకుమారుడు) ఎవరు? ______ .",
+        "answer": "అమ్నోను",
+        "options": [
+            "సొలొమోను",
+            "అబ్షాలోము",
+            "అమ్నోను",
+            "అదోనీయా"
+        ]
+    },
+    {
+        "id": 103,
+        "question": "అమ్నోను తల్లి పేరు ______ .",
+        "answer": "అహీనోయము",
+        "options": [
+            "అబీగయీలు",
+            "అహీనోయము",
+            "బత్షెబా",
+            "మయకా"
+        ]
+    },
+    {
+        "id": 104,
+        "question": "అహీనోయము ఏ ప్రాంతానికి చెందినది? ______ .",
+        "answer": "యెజ్రెయేలీయురాలు",
+        "options": [
+            "యెజ్రెయేలీయురాలు",
+            "గిలాడీయురాలు",
+            "కర్మెలీయురాలు",
+            "మోయాబీయురాలు"
+        ]
+    },
+    {
+        "id": 105,
+        "question": "దావీదుకు పుట్టిన రెండవ కుమారుని పేరు ______ .",
+        "answer": "కిల్యాబు",
+        "options": [
+            "షెఫట్య",
+            "కిల్యాబు",
+            "ఇత్రెయాము",
+            "నాథాను"
+        ]
+    },
+    {
+        "id": 106,
+        "question": "కిల్యాబు ఎవరి వలన పుట్టెను? ______ .",
+        "answer": "అబీగయీలు",
+        "options": [
+            "మీకాలు",
+            "అబీటలు",
+            "ఎగ్లా",
+            "అబీగయీలు"
+        ]
+    },
+    {
+        "id": 107,
+        "question": "అబీగయీలు పూర్వపు భర్త పేరు ______ .",
+        "answer": "నాబాలు",
+        "options": [
+            "నాబాలు",
+            "ఊరియా",
+            "ఇష్బోషెతు",
+            "అబ్నేరు"
+        ]
+    },
+    {
+        "id": 108,
+        "question": "నాబాలు ఏ ప్రాంతానికి చెందినవాడు? ______ .",
+        "answer": "కర్మెలీయుడు",
+        "options": [
+            "తిష్బీయుడు",
+            "బెత్లెహేమీయుడు",
+            "కర్మెలీయుడు",
+            "గิబియోనీయుడు"
+        ]
+    },
+    {
+        "id": 109,
+        "question": "దావీదు యొక్క మూడవ కుమారుని పేరు ______ .",
+        "answer": "అబ్షాలోము",
+        "options": [
+            "షిమ్యా",
+            "అబ్షాలోము",
+            "షోబాబు",
+            "సమూయేలు"
+        ]
+    },
+    {
+        "id": 110,
+        "question": "అబ్షాలోము తల్లి పేరు ______ .",
+        "answer": "మయకా",
+        "options": [
+            "హగ్గీతు",
+            "అబీటలు",
+            "మయకా",
+            "ఎగ్లా"
+        ]
+    },
+    {
+        "id": 111,
+        "question": "మయకా ఎవరి కుమార్తె? ______ .",
+        "answer": "തల్మయి",
+        "options": [
+            "హాముల్",
+            "തల్మయి",
+            "నాహాషు",
+            "కీషు"
+        ]
+    },
+    {
+        "id": 112,
+        "question": "తల్మయి ఏ దేశమునకు రాజు? ______ .",
+        "answer": "గెషూరు",
+        "options": [
+            "ఎదోము",
+            "సిరియా",
+            "గెషూరు",
+            "ఫిలిష్తియ"
+        ]
+    },
+    {
+        "id": 113,
+        "question": "దావీదు యొక్క నాలుగవ కుమారుడు ఎవరు? ______ .",
+        "answer": "అదోనీయా",
+        "options": [
+            "ఇత్రెయాము",
+            "షెఫట్య",
+            "కిల్యాబు",
+            "అదోనీయా"
+        ]
+    },
+    {
+        "id": 114,
+        "question": "అదోనీయా ఎవరి వలన పుట్టెను? ______ .",
+        "answer": "హగ్గీతు",
+        "options": [
+            "అహీనోయము",
+            "హగ్గీతు",
+            "అబీగయీలు",
+            "బత్షెబా"
+        ]
+    },
+    {
+        "id": 115,
+        "question": "దావీదు యొక్క అయిదవ కుమారుని పేరు ______ .",
+        "answer": "షెఫట్య",
+        "options": [
+            "నాథాను",
+            "ఇత్రెయాము",
+            "షెఫట్య",
+            "అమ్నోను"
+        ]
+    },
+    {
+        "id": 116,
+        "question": "షెఫట్యతల్లి పేరు ______ .",
+        "answer": "అబీటలు",
+        "options": [
+            "మయకా",
+            "అబీటలు",
+            "ఎగ్లా",
+            "మీకాలు"
+        ]
+    },
+    {
+        "id": 117,
+        "question": "దావీదుకు పుట్టిన ఆరవ కుమారుని పేరు ______ .",
+        "answer": "ఇత్రెయాము",
+        "options": [
+            "సొలొమోను",
+            "కిల్యాబు",
+            "ఇత్రెయాము",
+            "అబ్షాలోము"
+        ]
+    },
+    {
+        "id": 118,
+        "question": "ఇత్రెయాము తల్లి పేరు ______ .",
+        "answer": "ఎగ్లా",
+        "options": [
+            "అహీనోయము",
+            "హగ్గీతు",
+            "అబీగయీలు",
+            "ఎగ్లా"
+        ]
+    },
+    {
+        "id": 119,
+        "question": "ఎగ్లాను లేఖనములలో దావీదుకు ______ అని పిలిచిరి.",
+        "answer": "భార్యయగు",
+        "options": [
+            "దాసియగు",
+            "భార్యయగు",
+            "చెల్లెలగు",
+            "ఉపపత్నియగు"
+        ]
+    },
+    {
+        "id": 120,
+        "question": "హెబ్రోనులో దావీదుకు మొత్తం ఎంతమంది కుమారులు పుట్టిరి? ______ .",
+        "answer": "ఆరుగురు",
+        "options": [
+            "పన్నెండుమంది",
+            "ఆరుగురు",
+            "నలుగురు",
+            "పదిమంది"
+        ]
+    },
+    {
+        "id": 121,
+        "question": "సౌలు ఎవరిని చంపవలెనని పొంచియుండెను? ______ .",
+        "answer": "దావీదును",
+        "options": [
+            "యోనాతానును",
+            "దావీదును",
+            "గొల్యాతును",
+            "శామ్యుయేలును"
+        ]
+    },
+    {
+        "id": 122,
+        "question": "ఏ సమయంలో దావీదును చంపాలని సౌలు నిర్ణయించుకొనెను? ______ .",
+        "answer": "ఉదయమున",
+        "options": [
+            "మధ్యాహ్నమున",
+            "రాత్రివేళ",
+            "ఉదయమున",
+            "సాయంకాలమున"
+        ]
+    },
+    {
+        "id": 123,
+        "question": "దావీదును పట్టుకొనుటకై సౌలు ఎక్కడికి దూతలను పంపెను? ______ .",
+        "answer": "అతని యింటికి",
+        "options": [
+            "అరణ్యమునకు",
+            "సమాజమందిరమునకు",
+            "అతని యింటికి",
+            "బెత్లెహేమునకు"
+        ]
+    },
+    {
+        "id": 124,
+        "question": "దావీదు భార్య పేరు ______ .",
+        "answer": "మీకాలు",
+        "options": [
+            "రూతు",
+            "మీకాలు",
+            "దెబోరా",
+            "ఎస్తేరు"
+        ]
+    },
+    {
+        "id": 125,
+        "question": "మీకాలు ఎవరి కుమార్తె? ______ .",
+        "answer": "సౌలు",
+        "options": [
+            "సమూయేలు",
+            "సౌలు",
+            "అబ్నేరు",
+            "యీషయి"
+        ]
+    },
+    {
+        "id": 126,
+        "question": "“ఈ రాత్రి నీ ______ నీవు దక్కించుకొంటేనే గాని రేపు చంపబడుదువు” అని మీకాలు చెప్పెను.",
+        "answer": "ప్రాణమును",
+        "options": [
+            "ధనమును",
+            "రాజ్యమును",
+            "ప్రాణమును",
+            "గొర్రెలను"
+        ]
+    },
+    {
+        "id": 127,
+        "question": "దావీదును చంపాలని చూస్తున్న రాజు ఎవరు? ______ .",
+        "answer": "సౌలు",
+        "options": [
+            "అగగు",
+            "అకీషు",
+            "నెబుకద్నెజరు",
+            "సౌలు"
+        ]
+    },
+    {
+        "id": 128,
+        "question": "దావీదు ప్రాణమును కాపాడటానికి సహాయపడిన స్త్రీ ఎవరు? ______ .",
+        "answer": "మీకాలు",
+        "options": [
+            "రాహాబు",
+            "మీకాలు",
+            "యాయేలు",
+            "సారమ్మ"
+        ]
+    },
+    {
+        "id": 129,
+        "question": "మీకాలు దావీదును దేని గుండా కిందకు దింపెను? ______ .",
+        "answer": "కిటికీగుండ",
+        "options": [
+            "ప్రాకారము గుండా",
+            "కిటికీగుండ",
+            "ద్వారము గుండా",
+            "సొరంగము గుండా"
+        ]
+    },
+    {
+        "id": 130,
+        "question": "కిటికీ గుండా దిగిన తర్వాత దావీదు ఏమయ్యాడు? ______ .",
+        "answer": "తప్పించుకొని పారిపోయెను",
+        "options": [
+            "దొరికిపోయెను",
+            "తప్పించుకొని పారిపోయెను",
+            "యుద్ధము చేసెను",
+            "దాక్కునెను"
+        ]
+    },
+    {
+        "id": 131,
+        "question": "సౌలు పంపిన వారు ఎవరు? ______ .",
+        "answer": "దూతలు",
+        "options": [
+            "సైన్యాధిపతులు",
+            "దాసులు",
+            "దూతలు",
+            "స్నేహితులు"
+        ]
+    },
+    {
+        "id": 132,
+        "question": "ఉదయమున దావీదును ఏమి చేయవలెనని సౌలు పథకం వేసెను? ______ .",
+        "answer": "చంపవలెనని",
+        "options": [
+            "బంధించవలెనని",
+            "చంపవలెనని",
+            "విందునకు పిలవవలెనని",
+            "దేశమునుండి వెళ్లగొట్టవలెనని"
+        ]
+    },
+    {
+        "id": 133,
+        "question": "మీకాలు చెప్పిన మాట ప్రకారం దావీదు ఎప్పుడు తన ప్రాణమును దక్కించుకోవాలి? ______ .",
+        "answer": "ఈ రాత్రి",
+        "options": [
+            "రేపు ఉదయం",
+            "మరుసటి వారం",
+            "ఈ రాత్రి",
+            "వచ్చే శనివారం"
+        ]
+    },
+    {
+        "id": 134,
+        "question": "ఒకవేళ ఆ రాత్రితప్పించుకోకపోతే దావీదు ఎప్పుడు చంపబడతాడు? ______ .",
+        "answer": "రేపు",
+        "options": [
+            "మధ్యాహ్నము",
+            "వచ్చే నెల",
+            "రేపు",
+            "వెంటనే"
+        ]
+    },
+    {
+        "id": 135,
+        "question": "ఈ వచనాల ప్రకారం దావీదు తప్పించుకోవడానికి ఉపయోగించిన మార్గము ______ .",
+        "answer": "కిటికీ",
+        "options": [
+            "పైకప్పు",
+            "కిటికీ",
+            "వీధి తలుపు",
+            "పెరటి ద్వారము"
+        ]
+    },
+    {
+        "id": 136,
+        "question": "తన భర్తను కాపాడుకోవడానికి ధైర్యంగా నిలబడిన సౌలు కుమార్తె ______ .",
+        "answer": "మీకాలు",
+        "options": [
+            "మేరబు",
+            "అత్ల్యా",
+            "వష్తి",
+            "మీకాలు"
+        ]
+    },
+    {
+        "id": 137,
+        "question": "సౌలు దూతలను ఎందుకు పంపెను? ______ .",
+        "answer": "దావీదును పట్టుకొనుటకై",
+        "options": [
+            "బహుమతి ఇచ్చుటకై",
+            "దావీదును పట్టుకొనుటకై",
+            "సమాచారం తెలుసుకొనుటకై",
+            "క్షేమసమాచారం అడుగుటకై"
+        ]
+    },
+    {
+        "id": 138,
+        "question": "దావీదు మీకాలు మాట విని ఎలా వెళ్ళెను? ______ .",
+        "answer": "పారిపోయెను",
+        "options": [
+            "నెమ్మదిగా నడచివెళ్లెను",
+            "రథము మీద వెళ్లెను",
+            "పారిపోయెను",
+            "సైన్యముతో వెళ్లెను"
+        ]
+    },
+    {
+        "id": 139,
+        "question": "సౌలు ఎవరి మీద పగ పెంచుకొని దూతలను పంపెను? ______ .",
+        "answer": "దావీదు మీద",
+        "options": [
+            "యోనాతాను మీద",
+            "సమూయేలు మీద",
+            "గొల్యాతు మీద",
+            "దావీదు మీద"
+        ]
+    },
+    {
+        "id": 140,
+        "question": "దావీదు తన ఇంటి నుండి తప్పించుకున్న సమయం ______ .",
+        "answer": "రాత్రి వేళ",
+        "options": [
+            "మధ్యాహ్న కాలము",
+            "వేకువజాము",
+            "రాత్రి వేళ",
+            "సాయంత్రం"
+        ]
+    },
+    {
+        "id": 141,
+        "question": "సౌలు మీదికి బలముగా వచ్చినది ఏది? ______ .",
+        "answer": "దేవునియొద్దనుండి దురాత్మ",
+        "options": [
+            "దేవుని ఆత్మ",
+            "దేవునియొద్దనుండి దురాత్మ",
+            "శత్రువుల సైన్యము",
+            "భయంకరమైన వ్యాధి"
+        ]
+    },
+    {
+        "id": 142,
+        "question": "సౌలు తన ఇంటిలో ప్రవచిస్తుండగా, దావీదు దేనిని వాయించుచుండెను? ______ .",
+        "answer": "వీణ",
+        "options": [
+            "సితారా",
+            "తంబుర",
+            "వీణ",
+            "బాక"
+        ]
+    },
+    {
+        "id": 143,
+        "question": "ఒకప్పుడు సౌలు చేతిలో ఏ ఆయుధం ఉండెను? ______ .",
+        "answer": "ఒక ఈటె",
+        "options": [
+            "ఖడ్గము",
+            "ఒక ఈటె",
+            "విల్లు-అంబులు",
+            "గొడ్డలి"
+        ]
+    },
+    {
+        "id": 144,
+        "question": "దావీదును పొడిచి దేనికి బిగించాలని సౌలు అనుకొనెను? ______ .",
+        "answer": "గోడకు",
+        "options": [
+            "నేలకు",
+            "సింహాసనమునకు",
+            "మంచమునకు",
+            "గోడకు"
+        ]
+    },
+    {
+        "id": 145,
+        "question": "సౌలు విసిరిన ఈటె తగలకుండా దావీదు ఎన్నిమార్లుతప్పించుకొనెను? ______ .",
+        "answer": "రెండు मారులు",
+        "options": [
+            "ఒక మారు",
+            "రెండు मారులు",
+            "మూడు మారులు",
+            "నాలుగు మారులు"
+        ]
+    },
+    {
+        "id": 146,
+        "question": "యెహోవా ఎవరిని విడిచి దావీదునకు తోడై ఉండెను? ______ .",
+        "answer": "సౌలును",
+        "options": [
+            "సమూయేలును",
+            "యోనాతానును",
+            "సౌలును",
+            "అబ్నేరును"
+        ]
+    },
+    {
+        "id": 147,
+        "question": "యెహోవా దావీదునకు తోడై ఉండుట చూచి సౌలు అతనికి ______ .",
+        "answer": "భయపడెను",
+        "options": [
+            "కోపపడెను",
+            "భయపడెను",
+            "సంతోషించెను",
+            "పగబట్టెను"
+        ]
+    },
+    {
+        "id": 148,
+        "question": "సౌలు దావీదును తన యొద్దఉండనియ్యక ఏ పదవిలో నియమించెను? ______ .",
+        "answer": "సహస్రాధిపతిగా",
+        "options": [
+            "శతాధిపతిగా",
+            "ప్రధానమంత్రిగా",
+            "సహస్రాధిపతిగా",
+            "సైన్యాధిపతిగా"
+        ]
+    },
+    {
+        "id": 149,
+        "question": "దావీదు సమస్త విషయములలో ఎలా ప్రవర్తించెను? ______ .",
+        "answer": "సుబుద్ధిగలిగి",
+        "options": [
+            "మూర్ఖత్వముతో",
+            "గర్వముతో",
+            "సుబుద్ధిగలిగి",
+            "భయముతో"
+        ]
+    },
+    {
+        "id": 150,
+        "question": "దావీదు మిగుల సుబుద్ధిగలవాడై ప్రవర్తించుట చూచి సౌలు ఏమయ్యాడు? ______ .",
+        "answer": "మరి యధికముగా భయపడెను",
+        "options": [
+            "చాలా సంతోషించెను",
+            "మరి యధికముగా భయపడెను",
+            "అతనిని ప్రశంసించెను",
+            "పదవి నుండి తొలగించెను"
+        ]
+    },
+    {
+        "id": 151,
+        "question": "దావీదు జనులకు ముందువచ్చుచు పోవుచుండుట చూచి ఇశ్రాయేలు, యూదా వారు అతనిని ______ .",
+        "answer": "ప్రేమించిరి",
+        "options": [
+            "ద్వేషించిరి",
+            "తృణీకరించిరి",
+            "ప్రేమించిరి",
+            "వెలివేసిరి"
+        ]
+    },
+    {
+        "id": 152,
+        "question": "“నా చెయ్యి వానిమీద పడకూడదు, ఫిలిష్తీయుల చెయ్యి వానిమీద పడును గాక” అని సౌలు అనుకొనెను? ______ .",
+        "answer": "ఫిలిష్తీయుల చెయ్యి",
+        "options": [
+            "మోయాబీయుల చెయ్యి",
+            "అమాలేకీయుల చెయ్యి",
+            "ఫిలిష్తీయుల చెయ్యి",
+            "సిరియనుల చెయ్యి"
+        ]
+    },
+    {
+        "id": 153,
+        "question": "సౌలు తన ఏ కుమార్తెను దావీదుకు ఇస్తానని చెప్పెను? ______ .",
+        "answer": "పెద్దకుమార్తెయైన మేరబును",
+        "options": [
+            "చిన్నకుమార్తెయైన మీకాలును",
+            "పెద్దకుమార్తెయైన మేరబును",
+            "అత్ల్యాను",
+            "యెజెబెలును"
+        ]
+    },
+    {
+        "id": 154,
+        "question": "దావీదు ఎవరి యుద్ధములను జరిగింపవలెనని సౌలు కోరెను? ______ .",
+        "answer": "యెహోవా యుద్ధములను",
+        "options": [
+            "తన సొంత యుద్ధములను",
+            "రాజు యుద్ధములను",
+            "యెహోవా యుద్ధములను",
+            "ఇశ్రాయేలు యుద్ధములను"
+        ]
+    },
+    {
+        "id": 155,
+        "question": "“రాజునకు అల్లుడనగుటకు నేనెంతటివాడను?” అని దావీదు ఎవరితో అనెను? ______ .",
+        "answer": "సౌలుతో",
+        "options": [
+            "యోనాతానుతో",
+            "జనులతో",
+            "సౌలుతో",
+            "సమూయేలుతో"
+        ]
+    },
+    {
+        "id": 156,
+        "question": "మేరబును దావీదుకు ఇయ్యవలసి ఉండగా, సౌలు ఆమెను ఎవరికి ఇచ్చి పెళ్లి చేసెను? ______ .",
+        "answer": "అద్రీయేలుకి",
+        "options": [
+            "నాబాలుకి",
+            "అద్రీయేలుకి",
+            "బార్జిల్లనుకి",
+            "కిష్షుకి"
+        ]
+    },
+    {
+        "id": 157,
+        "question": "అద్రీయేలు ఏ ప్రాంతానికి చెందినవాడు? ______ .",
+        "answer": "మెహోలతీయుడు",
+        "options": [
+            "కర్మెలీయుడు",
+            "గిలాడీయుడు",
+            "మెహోలతీయుడు",
+            "బెత్లెహేమీయుడు"
+        ]
+    },
+    {
+        "id": 158,
+        "question": "సౌలు యొక్క ఏ కుమార్తె దావీదును ప్రేమించెను? ______ .",
+        "answer": "మీకాలు",
+        "options": [
+            "మేరబు",
+            "షెలోమీతు",
+            "మీకాలు",
+            "తిర్సా"
+        ]
+    },
+    {
+        "id": 159,
+        "question": "మీకాలు దావీదును ప్రేమిస్తున్నదని విని సౌలు ఏమయ్యాడు? ______ .",
+        "answer": "సంతోషించెను",
+        "options": [
+            "దుఃఖపడెను",
+            "ఆశ్చర్యపడెను",
+            "సంతోషించెను",
+            "ఆగ్రహించెను"
+        ]
+    },
+    {
+        "id": 160,
+        "question": "దావీదు ప్రవర్తనను బట్టి ఎవరు అతనికి తోడుగా ఉండిరి? ______ .",
+        "answer": "యెహోవా",
+        "options": [
+            "సౌలు",
+            "యోనాతాను",
+            "ఇశ్రాయేలీయులు",
+            "యెహోవా"
+        ]
+    },
+    {
+        "id": 161,
+        "question": "ఇశ్రాయేలుతో యుద్ధము చేయవలెనని కోరిన రాజు ఎవరు? ______ .",
+        "answer": "సిరియారాజు",
+        "options": [
+            "ఐగుప్తురాజు",
+            "మోయాబురాజు",
+            "సిరియారాజు",
+            "బబులోనురాజు"
+        ]
+    },
+    {
+        "id": 162,
+        "question": "ఇశ్రాయేలు రాజును హెచ్చరించి రక్షించిన దైవజనుడు ఎవరు? ______ .",
+        "answer": "ఎలీషా",
+        "options": [
+            "ఏలీయా",
+            "సమూయేలు",
+            "ఎలీషా",
+            "యෙසైయా"
+        ]
+    },
+    {
+        "id": 163,
+        "question": "సిరియనులు ఎక్కడ దిగి ఉన్నారో ఎలీషా ఎవరికి వర్తమానం పంపెను? ______ .",
+        "answer": "ఇశ్రాయేలు రాజునకు",
+        "options": [
+            "యూదా రాజునకు",
+            "ఇశ్రాయేలు రాజునకు",
+            "సిరియా రాజునకు",
+            "ఫిలిష్తీయుల రాజునకు"
+        ]
+    },
+    {
+        "id": 164,
+        "question": "తన రహస్యాలు బయటపడుతుండటంతో సిరియారాజు ఏమయ్యాడు? ______ .",
+        "answer": "కల్లోలపడెను",
+        "options": [
+            "నవ్వుకొనెను",
+            "కల్లోలపడెను",
+            "పారిపోయెను",
+            "శాంతించెను"
+        ]
+    },
+    {
+        "id": 165,
+        "question": "రాజు తన అంతఃపురమందు అనుకొనిన మాటలను ఇశ్రాయేలు రాజుకు తెలియజేస్తున్నది ఎవరు? ______ .",
+        "answer": "ప్రవక్తయగు ఎలీషా",
+        "options": [
+            "ప్రధానమంత్రి",
+            "ఒక వేగులవాడు",
+            "ప్రవక్తయగు ఎలీషా",
+            "ఒక దాసుడు"
+        ]
+    },
+    {
+        "id": 166,
+        "question": "ఎలీషా ఏ పట్టణంలో ఉన్నాడని వర్తమానం వచ్చెను? ______ .",
+        "answer": "દોతానులో",
+        "options": [
+            "యెరికోలో",
+            "షోమ్రోనులో",
+            "દોతానులో",
+            "గిల్గాలులో"
+        ]
+    },
+    {
+        "id": 167,
+        "question": "ఎలీషాను పట్టుకోవడానికి సిరియారాజు వేటిని పంపెను? ______ మరియు ______ .",
+        "answer": "గుఱ్ఱములను",
+        "options": [
+            "ఒంటెలను",
+            "గుఱ్ఱములను",
+            "సైనికులను",
+            "ఏనుగులను"
+        ]
+    },
+    {
+        "id": 168,
+        "question": "సిరియా సైన్యం ఏ సమయంలో వచ్చి పట్టణమును చుట్టుముట్టెను? ______ .",
+        "answer": "రాత్రివేళ",
+        "options": [
+            "మధ్యాహ్న కాలమున",
+            "ఉదయకాలమున",
+            "సాయంత్రము",
+            "రాత్రివేళ"
+        ]
+    },
+    {
+        "id": 169,
+        "question": "సైన్యాన్ని చూసి భయపడిన పనివానితో ఎలీషా ఏమన్నాడు? ______ .",
+        "answer": "భయపడవద్దు",
+        "options": [
+            "మనము పారిపోదాము",
+            "భయపడవద్దు",
+            "దేవుడు మనలను విడిచెను",
+            "యుద్ధము చేయుము"
+        ]
+    },
+    {
+        "id": 170,
+        "question": "“మన పక్షమున ఉన్నవారు వారికంటె ______ ” అని ఎలీషా చెప్పెను.",
+        "answer": "అధికులై యున్నారు",
+        "options": [
+            "తక్కువగా ఉన్నారు",
+            "అధికులై యున్నారు",
+            "బలహీనులై ఉన్నారు",
+            "జ్ఞానులై ఉన్నారు"
+        ]
+    },
+    {
+        "id": 171,
+        "question": "పనివాని కండ్లు తెరవబడాలని ఎలీషా ఎవరిని ప్రార్థించెను? ______ .",
+        "answer": "యెహోవాను",
+        "options": [
+            "ఇశ్రాయేలు రాజును",
+            "దేవదూతను",
+            "యెహోవాను",
+            "సిరియా రాజును"
+        ]
+    },
+    {
+        "id": 172,
+        "question": "కండ్లు తెరవబడినప్పుడు పర్వతమంతా వేటితో నిండి ఉండెను? ______ మరియు ______ .",
+        "answer": "అగ్ని గుఱ్ఱములను",
+        "options": [
+            "పొగమంచుతో",
+            "శత్రువుల సైన్యముతో",
+            "అగ్ని గుఱ్ఱములను",
+            "అడవి జంతువులతో"
+        ]
+    },
+    {
+        "id": 173,
+        "question": "సిరియా సైన్యాన్ని దేనితో మొత్తమని ఎలీషా వేడుకొనెను? ______ .",
+        "answer": "అంధత్వముతో",
+        "options": [
+            "తెగులుతో",
+            "అంధత్వముతో",
+            "మరణముతో",
+            "పిడుగులతో"
+        ]
+    },
+    {
+        "id": 174,
+        "question": "అంధత్వముతో ఉన్న సైన్యాన్ని ఎలీషా ఏ పట్టణమునకు నడిపించెను? ______ .",
+        "answer": "షోమ్రోను",
+        "options": [
+            "દોతాను",
+            "యెరూషలేము",
+            "షోమ్రోను",
+            "గిల్గాలు"
+        ]
+    },
+    {
+        "id": 175,
+        "question": "సైన్యం కండ్లు తెరవబడినప్పుడు వారు తాము ఏ పట్టణము మధ్య ఉన్నామని తెలుసుకున్నారు? ______ .",
+        "answer": "షోమ్రోను",
+        "options": [
+            "యెరికో",
+            "బేతేలు",
+            "గాజా",
+            "షోమ్రోను"
+        ]
+    },
+    {
+        "id": 176,
+        "question": "“నాయనా వీరిని కొట్టుదునా?” అని ఎలీషాను అడిగినది ఎవరు? ______ .",
+        "answer": "ఇశ్రాయేలు రాజు",
+        "options": [
+            "సిరియా రాజు",
+            "ఇశ్రాయేలు రాజు",
+            "ఎలీషా పనివాడు",
+            "యూదా రాజు"
+        ]
+    },
+    {
+        "id": 177,
+        "question": "శత్రువులను కొట్టవద్దని చెప్పి, వారికి ఏమి పెట్టించమని ఎలీషా చెప్పెను? ______ .",
+        "answer": "భోజనము",
+        "options": [
+            "విషము",
+            "భోజనము",
+            "బహుమతులు",
+            "బంధకములు"
+        ]
+    },
+    {
+        "id": 178,
+        "question": "భోజనం తిన్న తర్వాత ఆ సైన్యం ఎవరి యొద్దకు తిరిగి వెళ్ళెను? ______ .",
+        "answer": "తమ యజమానుని యొద్దకు",
+        "options": [
+            "అరణ్యమునకు",
+            "ఐగుప్తునకు",
+            "తమ యజమానుని యొద్దకు",
+            "చెరసాలకు"
+        ]
+    },
+    {
+        "id": 179,
+        "question": "ఇశ్రాయేలు రాజు వారి కొరకు ఎటువంటి భోజన పదార్థములను సిద్ధపరిచెను? ______ .",
+        "answer": "విస్తారమైన",
+        "options": [
+            "కొద్దిపాటి",
+            "విస్తారమైన",
+            "చేదైన",
+            "పాతదైన"
+        ]
+    },
+    {
+        "id": 180,
+        "question": "ఈ సంఘటన తర్వాత ఏ దేశపు దండువారు ఇశ్రాయేలు దేశములోకి రావడం మానివేసిరి? ______ .",
+        "answer": "సిరియనుల",
+        "options": [
+            "ఫిలిష్తీయుల",
+            "అమాలేకీయుల",
+            "సిరియనుల",
+            "మోయాబీయుల"
+        ]
+    },
+    {
+        "id": 181,
+        "question": "యూదా దేశము నుండి దైవజనుడు ఎక్కడికి వచ్చెను? ______ .",
+        "answer": "బేతేలునకు",
+        "options": [
+            "షోమ్రోనునకు",
+            "బేతేలునకు",
+            "యెరూషలేమునకు",
+            "దానను పట్టణమునకు"
+        ]
+    },
+    {
+        "id": 182,
+        "question": "దైవజనుడు వచ్చే సమయానికి యరొబాము బలిపీఠమునొద్ద నిలిచి ఏమి చేయుచుండెను? ______ .",
+        "answer": "ధూపము వేయుచుండెను",
+        "options": [
+            "ప్రార్థన చేయుచుండెను",
+            "బలి అర్పించుచుండెను",
+            "ధూపము వేయుచుండెను",
+            "ఏడ్చుచుండెను"
+        ]
+    },
+    {
+        "id": 183,
+        "question": "దావీదు సంతతిలో పుట్టబోయే ఏ శిశువు గురించి దైవజనుడు ప్రకటించెను? ______ .",
+        "answer": "యోషీయా",
+        "options": [
+            "హిజ్కియా",
+            "మనష్షే",
+            "యోషీయా",
+            "యెహోయాకీము"
+        ]
+    },
+    {
+        "id": 184,
+        "question": "దైవజనుడు చెప్పిన సూచన ప్రకారం ఏది బద్దలై బుగ్గి ఒలికిపోవలెను? ______ .",
+        "answer": "బలిపీఠము",
+        "options": [
+            "దేవాలయ గోడ",
+            "రాజు సింహాసనము",
+            "బలిపీఠము",
+            "బంగారు దూడ"
+        ]
+    },
+    {
+        "id": 185,
+        "question": "దైవజనుని పట్టుకోమని యరొబాము చేయి చాపగా అది ఏమయింది? ______ .",
+        "answer": "ఎండిపోయెను",
+        "options": [
+            "విరిగిపోయెను",
+            "ఎండిపోయెను",
+            "లావాయెను",
+            "మాయమాయెను"
+        ]
+    },
+    {
+        "id": 186,
+        "question": "రాజు చేయి మరల బాగుపడునట్లు దైవజనుడు ఎవరిని బతిమాలుకొనెను? ______ .",
+        "answer": "యెహోవాను",
+        "options": [
+            "యరొబామును",
+            "ముసలి ప్రవక్తను",
+            "యెహోవాను",
+            "దేవదూతను"
+        ]
+    },
+    {
+        "id": 187,
+        "question": "రాజు దైవజనునికి ఏమి ఇస్తానని ఆశ చూపించెను? ______ .",
+        "answer": "బహుమతి",
+        "options": [
+            "భూములను",
+            "పదవిని",
+            "వెండి బంగారములను",
+            "బహుమతి"
+        ]
+    },
+    {
+        "id": 188,
+        "question": "దైవజనుడు ఏ ఏ పనులు చేయవద్దని యెహోవా ఆజ్ఞాపించెను? ______ మరియు ______ పుచ్చుకోవద్దని.",
+        "answer": "అన్నపానములు",
+        "options": [
+            "నిద్రపోవద్దని",
+            "అన్నపానములు",
+            "ప్రార్థన చేయవద్దని",
+            "రాజును చూడవద్దని"
+        ]
+    },
+    {
+        "id": 189,
+        "question": "దైవజనుడు తిరిగి వెళ్లేటప్పుడు ఏ మార్గమున వెళ్లకూడదు? ______ .",
+        "answer": "వచ్చిన మార్గమున",
+        "options": [
+            "అరణ్య మార్గమున",
+            "రాజమార్గమున",
+            "వచ్చిన మార్గమున",
+            "కొండ మార్గమున"
+        ]
+    },
+    {
+        "id": 190,
+        "question": "బేతేలులో నివసిస్తున్న ఏ ప్రవక్తకు అతని కుమారులు ఈ విషయాలన్నీ తెలిపిరి? ______ .",
+        "answer": "ముసలి ప్రవక్తకు",
+        "options": [
+            "యంగ్ ప్రవక్తకు",
+            "ముసలి ప్రవక్తకు",
+            "ప్రధాన ప్రవక్తకు",
+            "అబద్ధ ప్రవక్తకు"
+        ]
+    },
+    {
+        "id": 191,
+        "question": "ముసలి ప్రవక్త దైవజనుని ఏ వృక్షము క్రింద కూర్చుండగా చూసెను? ______ .",
+        "answer": "మస్తకివృక్షము",
+        "options": [
+            "ఒలీవ వృక్షము",
+            "మస్తకివృక్షము",
+            "అంజూరపు వృక్షము",
+            "దేవదారు వృక్షము"
+        ]
+    },
+    {
+        "id": 192,
+        "question": "ముసలి ప్రవక్త దైవజనుని తన ఇంటికి పిలుచుకెళ్లడానికి ఏమని చెప్పి అబద్ధమాడెను? ______ .",
+        "answer": "దేవదూత చెప్పెనని",
+        "options": [
+            "రాజు రమ్మన్నాడని",
+            "దేవదూత చెప్పెనని",
+            "వర్షం వస్తుందని",
+            "తన భార్య పిలిచిందని"
+        ]
+    },
+    {
+        "id": 193,
+        "question": "దైవజనుడు ముసలి ప్రవక్తఇంటికి వెళ్లి దేనిని ఉల్లంఘించెను? ______ .",
+        "answer": "యెహోవా ఆజ్ఞను",
+        "options": [
+            "రాజు ఆజ్ఞను",
+            "పెద్దల పద్ధతిని",
+            "యెహోవా ఆజ్ఞను",
+            "మోషే ధర్మశాస్త్రమును"
+        ]
+    },
+    {
+        "id": 194,
+        "question": "దైవజనుడు భోజనం చేస్తుండగా ఎవరికి యెహోవా వాక్కు ప్రత్యక్షమాయెను? ______ .",
+        "answer": "ముసలి ప్రవక్తకు",
+        "options": [
+            "యూదా దైవజనునికి",
+            "రాజునకు",
+            "ప్రవక్త కుమారులకు",
+            "ముసలి ప్రవక్తకు"
+        ]
+    },
+    {
+        "id": 195,
+        "question": "దైవజనుని కళేబరము ఎక్కడికి రాదని యెహోవా వాక్కు సెలవిచ్చెను? ______ .",
+        "answer": "పิตరుల సమాధిలోనికి",
+        "options": [
+            "బేతేలు పట్టణములోనికి",
+            "పิตరుల సమాధిలోనికి",
+            "యెరూషలేము క్షేత్రములోనికి",
+            "రాజు సముఖములోనికి"
+        ]
+    },
+    {
+        "id": 196,
+        "question": "దైవజనుడు మార్గమున పోవుచుండగా అతనికి ఏది ఎదురై చంపెను? ______ .",
+        "answer": "ఒక సింహము",
+        "options": [
+            "ఒక ఎలుగుబంటి",
+            "ఒక సింహము",
+            "ఒక తోడేలు",
+            "ఒక పాము"
+        ]
+    },
+    {
+        "id": 197,
+        "question": "సింహము దైవజనుని చంపిన తర్వాత ఏ జంతువు శవము దగ్గరే నిలిచి ఉండెను? ______ .",
+        "answer": "గాడిద",
+        "options": [
+            "గుర్రము",
+            "ఒంటె",
+            "గాడిద",
+            "ఎద్దు"
+        ]
+    },
+    {
+        "id": 198,
+        "question": "సింహము దైవజనుని చంపినా దేనిని తినలేదు మరియు దేనిని చీల్చలేదు? ______ మరియు ______ .",
+        "answer": "శవమును",
+        "options": [
+            "బట్టలను",
+            "కట్టెలను",
+            "శవమును",
+            "నీళ్ల బుడ్లను"
+        ]
+    },
+    {
+        "id": 199,
+        "question": "దైవజనుని శవమును ముసలి ప్రవక్త ఎక్కడ పెట్టెను? ______ .",
+        "answer": "తన సమాధిలో",
+        "options": [
+            "అరణ్యములో",
+            "నదిలో",
+            "తన సమాధిలో",
+            "గుహలో"
+        ]
+    },
+    {
+        "id": 200,
+        "question": "శవమును సమాధిలో పెట్టినప్పుడు జనులు ఏమని ఏడ్చిరి? “కటకటా నా ______ ”.",
+        "answer": "సహోదరుడా",
+        "options": [
+            "తండ్రియా",
+            "ప్రవక్తా",
+            "స్నేహితుడా",
+            "సహోదరుడా"
+        ]
+    },
+    {
+        "id": 201,
+        "question": "నెహెమ్యాఎవరి కుమారుడైన షెమయాఇంటికి వెళ్లెను? ______ .",
+        "answer": "దెలాయ్యా",
+        "options": [
+            "హనన్య",
+            "దెలాయ్యా",
+            "సంబల్లటు",
+            "టోబీయా"
+        ]
+    },
+    {
+        "id": 202,
+        "question": "షెమయా యొక్క తాత పేరు ఏమిటి? ______ .",
+        "answer": "మెహేతబేలు",
+        "options": [
+            "నెహెమ్యా",
+            "మల్కీయా",
+            "మెహేతబేలు",
+            "ఎలియాషీబు"
+        ]
+    },
+    {
+        "id": 203,
+        "question": "షెమయాబయటికి రాకుండా ఏమయ్యాడు? ______ .",
+        "answer": "నిర్బంధింపబడెను",
+        "options": [
+            "రోగియాయెను",
+            "నిర్బంధింపబడెను",
+            "చనిపోయెను",
+            "పారిపోయెను"
+        ]
+    },
+    {
+        "id": 204,
+        "question": "శత్రువులు నెహెమ్యాను ఏ సమయంలో చంపడానికి వస్తారని షెమయాచెప్పెను? ______ .",
+        "answer": "రాత్రికాలమందు",
+        "options": [
+            "మధ్యాహ్నమందు",
+            "ప్రాతఃకాలమందు",
+            "రాత్రికాలమందు",
+            "సాయంత్రము"
+        ]
+    },
+    {
+        "id": 205,
+        "question": "షెమయానెహెమ్యాను ఎక్కడికి వెళ్లితలుపులు వేసుకోవాలని కోరెను? ______ .",
+        "answer": "దేవుని మందిర గర్భాలయములోకి",
+        "options": [
+            "రాజు కోటలోకి",
+            "ప్రాకారముపైకి",
+            "దేవుని మందిర గర్భాలయములోకి",
+            "పట్టణపు గుమ్మములోనికి"
+        ]
+    },
+    {
+        "id": 206,
+        "question": "“ ______ వాడు పారిపోవచ్చునా?” అని నెహెమ్యాప్రశ్నించెను.",
+        "answer": "నావంటి",
+        "options": [
+            "జ్ఞానముగల",
+            "నావంటి",
+            "బలహీనుడైన",
+            "సామాన్య"
+        ]
+    },
+    {
+        "id": 207,
+        "question": "తన ప్రాణమును రక్షించుకొనుటకైనను నెహెమ్యాఎక్కడ ప్రవేశించనని చెప్పెను? ______ .",
+        "answer": "గర్భాలయమున",
+        "options": [
+            "నెహెమ్యా తన ఇంట్లో",
+            "రాజనగరులో",
+            "గర్భాలయమున",
+            "శత్రువుల గుడారములో"
+        ]
+    },
+    {
+        "id": 208,
+        "question": "షెమయాను దేవుడు పంపలేదని నెహెమ్యాకు ఎప్పుడు తెలిసెను? ______ .",
+        "answer": "తేటగ కనుగొన్నప్పుడు",
+        "options": [
+            "చాలారోజుల తర్వాత",
+            "రాజు చెప్పినప్పుడు",
+            "ప్రార్థన చేసినప్పుడు",
+            "తేటగ కనుగొన్నప్పుడు"
+        ]
+    },
+    {
+        "id": 209,
+        "question": "షెమయాకు లంచమిచ్చిన ఇద్దరు వ్యక్తులు ఎవరు? ______ మరియు ______",
+        "answer": "టోబీయా",
+        "options": [
+            "గేషెము",
+            "టోబీయా",
+            "హనానీ",
+            "దోయేగు"
+        ]
+    },
+    {
+        "id": 210,
+        "question": "నెహెమ్యాను దేనిలో పడేయాలని వారు కుట్రపన్నిరి? ______ .",
+        "answer": "పాపములో",
+        "options": [
+            "చెరసాలలో",
+            "గోతిలో",
+            "పాపములో",
+            "అపనిందలో"
+        ]
+    },
+    {
+        "id": 211,
+        "question": "నెహెమ్యామీద నింద మోపుటకు వారు ఏ వార్తపుట్టించాలని చూశారు? ______ .",
+        "answer": "చెడువార్త",
+        "options": [
+            "మంచివార్త",
+            "చెడువార్త",
+            "దేవునివార్త",
+            "యుద్ధవార్త"
+        ]
+    },
+    {
+        "id": 212,
+        "question": "వారు షెమయాకు ఎందుకు డబ్బు ఇచ్చారు? ______ .",
+        "answer": "లంచమిచ్చిరి",
+        "options": [
+            "సహాయము చేసిరి",
+            "అప్పు ఇచ్చిరి",
+            "లంచమిచ్చిరి",
+            "జీతమిచ్చిరి"
+        ]
+    },
+    {
+        "id": 213,
+        "question": "నెహెమ్యాను భయపెట్టాలని చూసిన ప్రవక్త్రి పేరు ఏమిటి? ______ .",
+        "answer": "నోవద్యా",
+        "options": [
+            "దెబోరా",
+            "నోవద్యా",
+            "హుల్దా",
+            "అన్న"
+        ]
+    },
+    {
+        "id": 214,
+        "question": "తన శత్రువుల క్రియలను జ్ఞాపకము చేసుకోమని నెహెమ్యాఎవరిని వేడుకొనెను? ______ .",
+        "answer": "నా దేవా / దేవుని",
+        "options": [
+            "అర్తహషస్త రాజును",
+            "ఇశ్రాయేలు పెద్దలను",
+            "నా దేవా / దేవుని",
+            "లేవీయులను"
+        ]
+    },
+    {
+        "id": 215,
+        "question": "షెమయాచెప్పినట్లు చేస్తేనెహెమ్యాకు ఏమి పుడుతుందని వారు ఆశించారు? ______ .",
+        "answer": "భయము",
+        "options": [
+            "ధైర్యము",
+            "భయము",
+            "సంతోషము",
+            "జ్ఞానము"
+        ]
+    },
+    {
+        "id": 216,
+        "question": "షెమయాఇంటికి నెహెమ్యాఎప్పుడు వెళ్లెను? ______ .",
+        "answer": "అటుతరువాత / ఆ సంగతులు జరిగిన తరువాత",
+        "options": [
+            "గోడ కట్టకముందు",
+            "ఉదయకాలమున",
+            "అటుతరువాత / ఆ సంగతులు జరిగిన తరువాత",
+            "రాజు అనుమతి పొందాక"
+        ]
+    },
+    {
+        "id": 217,
+        "question": "నెహెమ్యాగర్భాలయంలోకి వెళ్తేఅతని మీద ఏమి మోపాలని శత్రువుల ఉద్దేశ్యం? ______ .",
+        "answer": "నింద",
+        "options": [
+            "కిరీటము",
+            "భరణము",
+            "నింద",
+            "నేరము"
+        ]
+    },
+    {
+        "id": 218,
+        "question": "షెమయానెహెమ్యాను చంపడానికి ఎవరు వస్తారని అబద్ధం చెప్పెను? ______ .",
+        "answer": "శత్రువులు/వారు",
+        "options": [
+            "రాజు సైన్యము",
+            "దొంగలు",
+            "అడవి జంతువులు",
+            "శత్రువులు/వారు"
+        ]
+    },
+    {
+        "id": 219,
+        "question": "నెహెమ్యాతన వ్యక్తిత్వాన్ని కాపాడుకోవడానికి దేనిని తిరస్కరించెను? ______ .",
+        "answer": "గర్భాలయమున ప్రవేశించుటను",
+        "options": [
+            "రాజు ద్రాక్షారసమును",
+            "గర్భాలయమున ప్రవేశించుటను",
+            "గోడ కట్టుటను",
+            "లంచము పుచ్చుకొనుటను"
+        ]
+    },
+    {
+        "id": 220,
+        "question": "ఈ వచనాల్లోనెహెమ్యాఎవరిని భయపెట్టేప్రవక్తల నుండి రక్షించమని ప్రార్థించెను? ______ .",
+        "answer": "టోబీయా మరియు సన్బల్లటు",
+        "options": [
+            "ఫరో మరియు ఐగుప్తీయుల నుండి",
+            "టోబీయా మరియు సన్బల్లటు",
+            "హామును మరియు అతని కుమారుల నుండి",
+            "గొల్యాతు మరియు ఫిలిష్తీయుల నుండి"
+        ]
+    },
+    {
+        "id": 221,
+        "question": "యూదయ, గలిలయ మరియు ______ దేశములందంతట సంఘము క్షేమాభివృద్ధినొందెను.",
+        "answer": "సమరయ",
+        "options": [
+            "పొంతు",
+            "ఐగుప్తు",
+            "సమరయ",
+            "మాసిదోనియ"
+        ]
+    },
+    {
+        "id": 222,
+        "question": "సంఘము దేనిని కలిగి ఉండెను? ______ .",
+        "answer": "సమాధానము",
+        "options": [
+            "గొప్ప ఆస్తిని",
+            "సమాధానము",
+            "శ్రమలను",
+            "సందిగ్ధతను"
+        ]
+    },
+    {
+        "id": 223,
+        "question": "సంఘము ఎవరియందు భయము కలిగి నడుచుకొనుచుండెను? ______ .",
+        "answer": "ప్రభువునందు",
+        "options": [
+            "రోమా అధికారులయందు",
+            "అపొస్తలులయందు",
+            "ప్రభువునందు",
+            "ప్రధానయాజకునియందు"
+        ]
+    },
+    {
+        "id": 224,
+        "question": "సంఘము దేని ద్వారా ఆదరణ పొందుచు విస్తరించుచుండెను? ______ .",
+        "answer": "పరిశుద్ధాత్మ",
+        "options": [
+            "ధనము ద్వారా",
+            "రాజుల దయ ద్వారా",
+            "పరిశుద్ధాత్మ",
+            "ధర్మశాస్త్రము ద్వారా"
+        ]
+    },
+    {
+        "id": 225,
+        "question": "పేతురు సకల ప్రదేశములలో ______ చేయుచుండెను.",
+        "answer": "సంచారము",
+        "options": [
+            "వ్యాపారము",
+            "సంచారము",
+            "ప్రార్థన",
+            "నివాసము"
+        ]
+    },
+    {
+        "id": 226,
+        "question": "పేతురు ఏ పట్టణంలో కాపురమున్న పరిశుద్ధుల యొద్దకు వచ్చెను? ______ .",
+        "answer": "లుద్దలో",
+        "options": [
+            "యొప్పెలో",
+            "కైసరయలో",
+            "లుద్దలో",
+            "దమస్కులో"
+        ]
+    },
+    {
+        "id": 227,
+        "question": "లుద్దలో పేతురు చూసిన మనుష్యుని పేరు ఏమిటి? ______ .",
+        "answer": "ఐనెయ",
+        "options": [
+            "తబితా",
+            "కొర్నేలియు",
+            "ఐనెయ",
+            "సీమోను"
+        ]
+    },
+    {
+        "id": 228,
+        "question": "ఐనెయ ఏ వ్యాధితో బాధపడుచుండెను? ______ .",
+        "answer": "పక్షవాయువు",
+        "options": [
+            "కుష్ఠురోగము",
+            "పక్షవాయువు",
+            "గుడ్డితనము",
+            "జ్వరము"
+        ]
+    },
+    {
+        "id": 229,
+        "question": "ఐనెయ ఎన్ని ఏండ్లనుండి మంచము పట్టియుండెను? ______ .",
+        "answer": "ఎనిమిది ఏండ్లు",
+        "options": [
+            "ఐదేండ్లు",
+            "పన్నెండేండ్లు",
+            "ఎనిమిది ఏండ్లు",
+            "ముప్పై ఎనిమిది ఏండ్లు"
+        ]
+    },
+    {
+        "id": 230,
+        "question": "“ఐనెయా, ______ నిన్ను స్వస్థపరచుచున్నాడు” అని పేతురు చెప్పెను.",
+        "answer": "యేసు క్రీస్తు",
+        "options": [
+            "పేతురు",
+            "యేసు క్రీస్తు",
+            "యెహోవా",
+            "దేవదూత"
+        ]
+    },
+    {
+        "id": 231,
+        "question": "పేతురు ఐనెయతో “నీ ______ నీవే పరచుకొనుము” అని చెప్పెను.",
+        "answer": "పరుపు",
+        "options": [
+            "బట్టలు",
+            "ఇల్లు",
+            "చాప",
+            "పరుపు"
+        ]
+    },
+    {
+        "id": 232,
+        "question": "స్వస్థత మాట వినగానే ఐనెయ ______ లేచెను.",
+        "answer": "వెంటనే",
+        "options": [
+            "మరుసటి రోజు",
+            "కొద్దిసేపటి తర్వాత",
+            "వెంటనే",
+            "నడుచుకుంటూ"
+        ]
+    },
+    {
+        "id": 233,
+        "question": "ఐనెయను చూచినవారందరు ఎవరి తట్టు తిరిగిరి? ______ .",
+        "answer": "ప్రభువు తట్టు",
+        "options": [
+            "పేతురు తట్టు",
+            "ప్రభువు తట్టు",
+            "సమాజమందిరము తట్టు",
+            "తమ ఇళ్ల తట్టు"
+        ]
+    },
+    {
+        "id": 234,
+        "question": "లుద్దతో పాటు ఏ ప్రాంతపు వారు ఐనెయను చూచి ప్రభువును నమ్మిరి? ______ .",
+        "answer": "షారోనులో ఉన్నవారు",
+        "options": [
+            "యొప్పెలో ఉన్నవారు",
+            "షారోనులో ఉన్నవారు",
+            "సమరయలో ఉన్నవారు",
+            "గలిలయలో ఉన్నవారు"
+        ]
+    },
+    {
+        "id": 235,
+        "question": "పేతురు ఎవరి యొద్దకు వచ్చెనని 32వ వచనం చెబుతోంది? ______ .",
+        "answer": "పరిశుద్ధుల యొద్దకు",
+        "options": [
+            "అన్యుల యొద్దకు",
+            "పరిసయ్యుల యొద్దకు",
+            "పరిశుద్ధుల యొద్దకు",
+            "తన కుటుంబము యొద్దకు"
+        ]
+    },
+    {
+        "id": 236,
+        "question": "ఐనెయ స్వస్థత పొందిన తర్వాత వెంటనే చేసిన పని ఏమిటి? ______ .",
+        "answer": "లేచెను",
+        "options": [
+            "ప్రసంగము చేసెను",
+            "పరుగెత్తెను",
+            "లేచెను",
+            "కేకలు వేసెను"
+        ]
+    },
+    {
+        "id": 237,
+        "question": "ఈ వచనాల ప్రకారం సంఘము ఎలా అభివృద్ధిచెందుతోంది? ______ .",
+        "answer": "క్షేమాభివృద్ధి",
+        "options": [
+            "నెమ్మదిగా",
+            "ఆగిపోతూ",
+            "క్షేమాభివృద్ధి",
+            "శారీరకముగా"
+        ]
+    },
+    {
+        "id": 238,
+        "question": "ఐనెయ ఎక్కడ పడియుండెను? ______ .",
+        "answer": "మంచము మీద",
+        "options": [
+            "నేల మీద",
+            "గుమ్మము వద్ద",
+            "మంచము మీద",
+            "వీధిలో"
+        ]
+    },
+    {
+        "id": 239,
+        "question": "అపొస్తలుడైన ______ సంచారము చేయుచు లుద్దకు వచ్చెను.",
+        "answer": "పేతురు",
+        "options": [
+            "పౌలు",
+            "యోహాను",
+            "ఫిలిప్పు",
+            "పేతురు"
+        ]
+    },
+    {
+        "id": 240,
+        "question": "ఐనెయ స్వస్థత ఏ నామమున జరిగింది? ______ .",
+        "answer": "యేసు క్రీస్తు నామమున",
+        "options": [
+            "మోషే నామమున",
+            "పేతురు సొంత నామమున",
+            "యేసు క్రీస్తు నామమున",
+            "అబ్రాహాము నామమున"
+        ]
+    },
+    {
+        "id": 241,
+        "question": "జలప్రళయం తగ్గినప్పుడు, నోవహు తాను చేసిన ఓడకు ఉన్న ______ తెరిచెను.",
+        "answer": "కిటికీని",
+        "options": [
+            "తలుపును",
+            "పైకప్పును",
+            "కిటికీని",
+            "రంధ్రమును"
+        ]
+    },
+    {
+        "id": 242,
+        "question": "నోవహు నీళ్లు తగ్గినవో లేదో చూచుటకు కిటికీ ద్వారా మొదట దేనిని విడిచిపెట్టెను? ______ .",
+        "answer": "కాకిని",
+        "options": [
+            "పావురమును",
+            "కాకిని",
+            "గువ్వను",
+            "గద్దను"
+        ]
+    },
+    {
+        "id": 243,
+        "question": "కాకి తరువాత నోవహు ఓడ కిటికీ నుండి దేనిని బయటికి పంపెను? ______ .",
+        "answer": "పావురమును",
+        "options": [
+            "పిచ్చుకను",
+            "కోడిని",
+            "పావురమును",
+            "నెమలిని"
+        ]
+    },
+    {
+        "id": 244,
+        "question": "యెరికో వేగులవారిని రాహాబు ఏ రంగు దారముతో కిటికీ గుండా కిందికి దించెను? ______ .",
+        "answer": "ఎర్రని నూలునూలు",
+        "options": [
+            "పచ్చని",
+            "తెల్లని",
+            "ఎర్రని నూలునూలు",
+            "నల్లని"
+        ]
+    },
+    {
+        "id": 245,
+        "question": "వేగులవారు వెళ్ళినప్పుడు రాహాబు తన ఇంటి ______ కు ఆ ఎర్రని దారమును కట్టెను.",
+        "answer": "కిటికీ",
+        "options": [
+            "గుమ్మము",
+            "గోడ",
+            "మంచము",
+            "కిటికీ"
+        ]
+    },
+    {
+        "id": 246,
+        "question": "సౌలు నుండి తప్పించుకొనుటకు మీకాలు దావీదును దేని గుండా కిందికి దింపెను? ______ .",
+        "answer": "কিటికీగుండ",
+        "options": [
+            "కోట ప్రాకారము",
+            "వెనుక తలుపు",
+            "কিటికీగుండ",
+            "పైకప్పు"
+        ]
+    },
+    {
+        "id": 247,
+        "question": "మీకాలు దావీదును కిటికీ గుండా దింపి, మంచము మీద దేనిని పండబెట్టిముసుగు వేసెను? ______ .",
+        "answer": "ఒక ప్రతిమను",
+        "options": [
+            "దిండ్లను",
+            "కట్టెలను",
+            "ఒక ప్రతిమను",
+            "బట్టల మూటను"
+        ]
+    },
+    {
+        "id": 248,
+        "question": "అపొస్తలుడైన పౌలు ప్రసంగము చేయుచుండగా ఐతుకు అను యౌవనస్థుడు ఎక్కడ కూర్చుండి ఉండెను? ______ .",
+        "answer": "కిటికీలో",
+        "options": [
+            "కుర్చీలో",
+            "కిటికీలో",
+            "వేదికపై",
+            "నేలమీద"
+        ]
+    },
+    {
+        "id": 249,
+        "question": "ఐతుకు గాఢనిద్రలో మునిగి, ఎన్నవ అంతస్తు కిటికీ నుండి కింద పడిపోయెను? ______ .",
+        "answer": "మూడవ అంతస్తు",
+        "options": [
+            "రెండవ అంతస్తు",
+            "మూడవ అంతస్తు",
+            "నాల్గవ అంతస్తు",
+            "ఐదవ అంతస్తు"
+        ]
+    },
+    {
+        "id": 250,
+        "question": "కిటికీ నుండి కింద పడి చనిపోయిన ఐతుకును ఎవరు మరల బ్రతికించిరి? ______ .",
+        "answer": "పౌలు",
+        "options": [
+            "పేతురు",
+            "సీల",
+            "తిమోతి",
+            "పౌలు"
+        ]
+    },
+    {
+        "id": 251,
+        "question": "యెహూ ఇజ్రాయేలుకు వచ్చినప్పుడు, యెజెబెలుతన కళ్లకు కాటుక పెట్టుకొని దేని ద్వారా చూచెను? ______ .",
+        "answer": "కిటికీ ద్వారా",
+        "options": [
+            "అద్దము ద్వారా",
+            "కిటికీ ద్వారా",
+            "తెర వెనుక నుండి",
+            "గోడ రంధ్రము నుండి"
+        ]
+    },
+    {
+        "id": 252,
+        "question": "యెజెబెలును కిటికీ గుండా కిందకు త్రోసివేయమని యెహూ ఎవరికి ఆజ్ఞాపించెను? ______ .",
+        "answer": "నపుంసకులకు",
+        "options": [
+            "సైనికులకు",
+            "దాసులకు",
+            "నపుంసకులకు",
+            "ప్రజలకు"
+        ]
+    },
+    {
+        "id": 253,
+        "question": "కిటికీ గుండా కింద పడిన యెజెబెలును ఏ జంతువులు తినివేసెను? ______ .",
+        "answer": "కుక్కలు",
+        "options": [
+            "నక్కలు",
+            "కుక్కలు",
+            "సింహాలు",
+            "తోడేళ్లు"
+        ]
+    },
+    {
+        "id": 254,
+        "question": "సిరియా రాజు చేతిలో నుండి తప్పించుకొనుటకు పౌలును దేనిలో ఉంచి కిటికీ గుండా దింపిరి? ______ .",
+        "answer": "গంపలో",
+        "options": [
+            "పెట్టెలో",
+            "సంచిలో",
+            "গంపలో",
+            "తట్టలో"
+        ]
+    },
+    {
+        "id": 255,
+        "question": "దానియేలు తన ఇంటి పైగది ______ యెరూషలేము తట్టునకు తెరిచి ప్రార్థన చేసేవాడు.",
+        "answer": "కిటికీలు",
+        "options": [
+            "తలుపులు",
+            "కిటికీలు",
+            "తెరలు",
+            "పైకప్పు"
+        ]
+    },
+    {
+        "id": 256,
+        "question": "సీసరా తల్లితన కుమారుని కోసం దేని ద్వారా కనిపెట్టిచూచుచుండెను? ______ .",
+        "answer": "కిటికీ గుండా",
+        "options": [
+            "ప్రాకారము గుండా",
+            "మార్గము గుండా",
+            "రథము గుండా",
+            "కిటికీ గుండా"
+        ]
+    },
+    {
+        "id": 257,
+        "question": "సొలొమోను దేవాలయమునకు గాలి వెలుతురు వచ్చుటకై ఏ రకమైన కిటికీలు చేయించెను? ______ .",
+        "answer": "చట్రములు గల కిటికీలు",
+        "options": [
+            "పెద్ద కిటికీలు",
+            "చట్రములు గల కిటికీలు",
+            "గుండ్రని కిటికీలు",
+            "ఇనుప కిటికీలు"
+        ]
+    },
+    {
+        "id": 258,
+        "question": "కరువు కాలంలో ఆకాశపు ______ విప్పబడినను ఆహారం దొరుకునా అని ఒక అధికారి ఎలీషాతో అనెను. ______ .",
+        "answer": "కిటికీలు",
+        "options": [
+            "ద్వారములు",
+            "కిటికీలు",
+            "మేఘములు",
+            "రంధ్రములు"
+        ]
+    },
+    {
+        "id": 259,
+        "question": "మలాకీ గ్రంథం ప్రకారం దశమభాగము ఇస్తే దేవుడు ఆకాశపు ______ విప్పి దీవించుదుననెను.",
+        "answer": "కిటికీలను",
+        "options": [
+            "నిధులు",
+            "గుమ్మములను",
+            "కిటికీలను",
+            "ఆశీర్వాదములను"
+        ]
+    },
+    {
+        "id": 260,
+        "question": "యెరికో పట్టణ ప్రాకారము మీద ఎవరి ఇల్లు కిటికీ కలిగి ఉండెను? ______ .",
+        "answer": "రాహాబు ఇల్లు",
+        "options": [
+            "దెబోరా ఇల్లు",
+            "రాహాబు ఇల్లు",
+            "మీకాలు ఇల్లు",
+            "రూతు ఇల్లు"
+        ]
+    }
+];
+
+        // ==========================================
+        // APPLICATION STATE MANAGEMENT
+        // ==========================================
+        let userState = {
+            name: '',
+            surname: ''
+        };
+
+        let examState = {
+            started: false,
+            completed: false,
+            currentPage: 0, // 0 to 5 (50 questions per page)
+            answers: {},    // key: questionId, value: selectedAnswer
+            bookmarks: new Set(), // questionIds flagged for review
+            visited: new Set(),   // questionIds that have been loaded/seen
+            startTime: null,
+            endTime: null,
+            timerInterval: null,
+            timeLeft: 100 * 60, // 1h 40m = 6000 seconds
+            options: {} // Stores choices per question: { qId: [opt1, opt2, opt3, opt4] }
+        };
+
+        const TOTAL_QUESTIONS = questions.length;
+        const QUESTIONS_PER_PAGE = 50;
+        const TOTAL_PAGES = Math.ceil(TOTAL_QUESTIONS / QUESTIONS_PER_PAGE);
+
+        // Initial load: populate unvisited questions list
+        document.addEventListener("DOMContentLoaded", () => {
+            // Listeners for host settings
+            document.getElementById("host-hours").addEventListener("input", updateWelcomeRules);
+            document.getElementById("host-minutes").addEventListener("input", updateWelcomeRules);
+            updateWelcomeRules();
+
+            // Listeners for host settings
+            document.getElementById("host-hours").addEventListener("input", updateWelcomeRules);
+            document.getElementById("host-minutes").addEventListener("input", updateWelcomeRules);
+            updateWelcomeRules();
+
+            // Warm up: Extract unique answers to make option generation pool
+            const uniqueAnswers = Array.from(new Set(questions.map(q => q.answer)));
+
+            // Generate options for each question once to keep options stable per attempt
+            questions.forEach(q => {
+                if (q.options && q.options.length > 0) {
+                    examState.options[q.id] = [...q.options];
+                } else {
+                    const correctVal = q.answer;
+                    // Filter correct out to pick incorrect pool
+                    const incorrectPool = uniqueAnswers.filter(ans => ans !== correctVal);
+                    const shuffledIncorrect = shuffleArray([...incorrectPool]);
+                    const selectedIncorrect = shuffledIncorrect.slice(0, 3);
+                    const combined = [correctVal, ...selectedIncorrect];
+                    examState.options[q.id] = shuffleArray(combined);
+                }
+            });
+        });
+
+        // Helper functions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[array[j]]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Toast Notification helper
+        function showToast(message, type = "info") {
+            const toast = document.getElementById("toast");
+            const icon = document.getElementById("toast-icon");
+            const text = document.getElementById("toast-text");
+
+            toast.className = `toast active ${type}`;
+            text.innerText = message;
+
+            if (type === "success") {
+                icon.className = "fa-solid fa-circle-check";
+            } else if (type === "error") {
+                icon.className = "fa-solid fa-circle-exclamation";
+            } else {
+                icon.className = "fa-solid fa-circle-info";
+            }
+
+            setTimeout(() => {
+                toast.classList.remove("active");
+            }, 4000);
+        }
+
+        // ==========================================
+        // EXAM MANAGEMENT - TRANSITIONS
+        // ==========================================
+        function startExam() {
+            const surnameInput = document.getElementById("user-surname").value.trim();
+            const nameInput = document.getElementById("user-name").value.trim();
+
+            if (!surnameInput || !nameInput) {
+                showToast("దయచేసి మీ ఇంటి పేరు మరియు పేరు నమోదు చేయండి.", "error");
+                return;
+            }
+
+            userState.surname = surnameInput;
+            userState.name = nameInput;
+
+            // Update UI elements
+            document.getElementById("user-badge-name").innerText = `${userState.surname} ${userState.name}`;
+            document.getElementById("header-user").style.display = "flex";
+
+            // Initialize state details
+            examState.started = true;
+            examState.startTime = new Date();
+            // Get host settings time
+            const hostHours = parseInt(document.getElementById("host-hours").value);
+            const hostMins = parseInt(document.getElementById("host-minutes").value);
+            if (!isNaN(hostHours) && !isNaN(hostMins)) {
+                examState.timeLeft = (hostHours * 3600) + (hostMins * 60);
+            } else {
+                examState.timeLeft = 100 * 60;
+            }
+            examState.totalTime = examState.timeLeft;
+
+            // Generate palette grid
+            renderPalette();
+
+            // Navigate to first page and track visited questions
+            goToPage(0);
+
+            // Start timer countdown
+            startTimer();
+
+            // Show screen
+            switchScreen("exam-screen");
+            showToast("పరీక్ష విజయవంతంగా ప్రారంభించబడింది. ఆల్ ది బెస్ట్!", "success");
+        }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll(".screen").forEach(scr => {
+                scr.classList.remove("active");
+            });
+            document.getElementById(screenId).classList.add("active");
+            window.scrollTo(0, 0);
+        }
+
+        // ==========================================
+        // QUESTION PALETTE
+        // ==========================================
+        function renderPalette() {
+            const grid = document.getElementById("palette-grid");
+            grid.innerHTML = "";
+
+            for (let i = 1; i <= TOTAL_QUESTIONS; i++) {
+                const btn = document.createElement("button");
+                btn.innerText = i;
+                btn.id = `palette-btn-${i}`;
+                btn.className = "palette-btn unvisited";
+
+                // Click palette button: navigate directly to that question page and scroll into view
+                btn.onclick = () => {
+                    const pageIndex = Math.floor((i - 1) / QUESTIONS_PER_PAGE);
+                    goToPage(pageIndex);
+
+                    // Smooth scroll to specific question card
+                    setTimeout(() => {
+                        const card = document.getElementById(`q-card-${i}`);
+                        if (card) {
+                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            card.classList.add("highlighted");
+                            setTimeout(() => card.classList.remove("highlighted"), 2000);
+                        }
+                    }, 150);
+                };
+
+                grid.appendChild(btn);
+            }
+            updatePaletteUI();
+        }
+
+        function updatePaletteUI() {
+            let answeredCount = 0;
+
+            for (let i = 1; i <= TOTAL_QUESTIONS; i++) {
+                const btn = document.getElementById(`palette-btn-${i}`);
+                if (!btn) continue;
+
+                let statusClass = "unvisited";
+
+                if (examState.answers[i]) {
+                    statusClass = "answered";
+                    answeredCount++;
+                } else if (examState.bookmarks.has(i)) {
+                    statusClass = "bookmarked";
+                } else if (examState.visited.has(i)) {
+                    statusClass = "visited";
+                }
+
+                btn.className = `palette-btn ${statusClass}`;
+
+                // Highlight active question if it belongs to current page
+                const firstQOnPage = examState.currentPage * QUESTIONS_PER_PAGE + 1;
+                const lastQOnPage = firstQOnPage + QUESTIONS_PER_PAGE - 1;
+                if (i >= firstQOnPage && i <= lastQOnPage) {
+                    btn.classList.add("current");
+                } else {
+                    btn.classList.remove("current");
+                }
+            }
+
+            // Update palette counts
+            document.getElementById("palette-progress").innerText = `పూర్తయింది: ${answeredCount}/${TOTAL_QUESTIONS}`;
+        }
+
+        // ==========================================
+        // RENDER QUESTIONS ON PAGE
+        // ==========================================
+        function goToPage(pageIndex) {
+            if (pageIndex < 0 || pageIndex >= TOTAL_PAGES) return;
+            examState.currentPage = pageIndex;
+
+            const container = document.getElementById("questions-container");
+            container.innerHTML = "";
+
+            const startIdx = pageIndex * QUESTIONS_PER_PAGE;
+            const endIdx = startIdx + QUESTIONS_PER_PAGE;
+            const pageQuestions = questions.slice(startIdx, endIdx);
+
+            pageQuestions.forEach(q => {
+                // Mark question as visited
+                examState.visited.add(q.id);
+
+                const card = document.createElement("div");
+                card.id = `q-card-${q.id}`;
+                card.className = "question-card";
+
+                const qHeader = document.createElement("div");
+                qHeader.className = "q-header";
+
+                const qTitle = document.createElement("div");
+                qTitle.className = "q-text";
+                qTitle.innerHTML = `<span class="q-number">${q.id}</span> ${q.question}`;
+
+                const bookmarkBtn = document.createElement("button");
+                bookmarkBtn.className = `bookmark-btn ${examState.bookmarks.has(q.id) ? 'active' : ''}`;
+                bookmarkBtn.title = "తర్వాత పరిశీలన కోసం గుర్తించు";
+                bookmarkBtn.innerHTML = examState.bookmarks.has(q.id) ?
+                    '<i class="fa-solid fa-bookmark"></i>' :
+                    '<i class="fa-regular fa-bookmark"></i>';
+
+                bookmarkBtn.onclick = () => toggleBookmark(q.id, bookmarkBtn);
+
+                qHeader.appendChild(qTitle);
+                qHeader.appendChild(bookmarkBtn);
+                card.appendChild(qHeader);
+
+                // Options Grid
+                const optionsGrid = document.createElement("div");
+                optionsGrid.className = "options-grid";
+
+                const choices = examState.options[q.id];
+                choices.forEach((choice, cIdx) => {
+                    const isSelected = examState.answers[q.id] === choice;
+
+                    const label = document.createElement("label");
+                    label.className = `option-label ${isSelected ? 'selected' : ''}`;
+
+                    const radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.name = `question-${q.id}`;
+                    radio.value = choice;
+                    radio.checked = isSelected;
+
+                    radio.onchange = () => selectOption(q.id, choice);
+
+                    const bullet = document.createElement("div");
+                    bullet.className = "option-bullet";
+                    bullet.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+                    const optionLetters = ["A", "B", "C", "D"];
+                    const prefix = `${optionLetters[cIdx]}) `;
+                    const text = document.createElement("span");
+                    text.className = "option-text";
+                    text.innerText = prefix + choice;
+
+                    label.appendChild(radio);
+                    label.appendChild(bullet);
+                    label.appendChild(text);
+                    optionsGrid.appendChild(label);
+                });
+
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            // Update Navigation Buttons & indicators
+            document.getElementById("page-indicator").innerText = `పేజీ ${pageIndex + 1} / ${TOTAL_PAGES}`;
+            document.getElementById("prev-btn").disabled = pageIndex === 0;
+
+            // Handle next vs submit buttons depending on page index
+            const isLastPage = pageIndex === TOTAL_PAGES - 1;
+            if (isLastPage) {
+                document.getElementById("next-btn").style.display = "none";
+                document.getElementById("last-page-submit-btn").style.display = "inline-flex";
+            } else {
+                document.getElementById("next-btn").style.display = "inline-flex";
+                document.getElementById("last-page-submit-btn").style.display = "none";
+            }
+
+            updatePaletteUI();
+            window.scrollTo(0, 0);
+        }
+
+        function changePage(direction) {
+            goToPage(examState.currentPage + direction);
+        }
+
+        function selectOption(qId, selectedText) {
+            examState.answers[qId] = selectedText;
+
+            // Re-render only options select borders inside question card for quick performance
+            const card = document.getElementById(`q-card-${qId}`);
+            if (card) {
+                card.querySelectorAll(".option-label").forEach(lbl => {
+                    const radio = lbl.querySelector("input[type='radio']");
+                    if (radio && radio.value === selectedText) {
+                        lbl.classList.add("selected");
+                    } else {
+                        lbl.classList.remove("selected");
+                    }
+                });
+            }
+            updatePaletteUI();
+        }
+
+        function toggleBookmark(qId, btnElement) {
+            if (examState.bookmarks.has(qId)) {
+                examState.bookmarks.delete(qId);
+                btnElement.classList.remove("active");
+                btnElement.innerHTML = '<i class="fa-regular fa-bookmark"></i>';
+            } else {
+                examState.bookmarks.add(qId);
+                btnElement.classList.add("active");
+                btnElement.innerHTML = '<i class="fa-solid fa-bookmark"></i>';
+            }
+            updatePaletteUI();
+        }
+
+        // ==========================================
+        // TIMER ENGINE
+        // ==========================================
+        function startTimer() {
+            if (examState.timerInterval) clearInterval(examState.timerInterval);
+
+            const totalTime = examState.totalTime || 150 * 60;
+            updateTimerUI(totalTime);
+
+            examState.timerInterval = setInterval(() => {
+                examState.timeLeft--;
+
+                if (examState.timeLeft <= 0) {
+                    clearInterval(examState.timerInterval);
+                    updateTimerUI(0);
+                    showToast("సమయం ముగిసింది! మీ పరీక్ష సబ్మిట్ చేయబడుతోంది...", "error");
+                    setTimeout(() => submitExam(true), 2000); // Auto submit on timeout
+                } else {
+                    updateTimerUI(totalTime);
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI(totalTime) {
+            const hours = Math.floor(examState.timeLeft / 3600);
+            const minutes = Math.floor((examState.timeLeft % 3600) / 60);
+            const seconds = examState.timeLeft % 60;
+
+            // Pad numbers
+            document.getElementById("time-hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("time-minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("time-seconds").innerText = String(seconds).padStart(2, '0');
+
+            // Visual progress bar percentage
+            const percent = (examState.timeLeft / totalTime) * 100;
+            const progressFill = document.getElementById("timer-progress");
+            progressFill.style.width = `${percent}%`;
+
+            const display = document.getElementById("timer-display");
+            if (examState.timeLeft < 5 * 60) {
+                // Less than 5 mins: Danger Red
+                display.className = "timer-display danger";
+                progressFill.style.backgroundColor = "var(--danger)";
+            } else if (examState.timeLeft < 15 * 60) {
+                // Less than 15 mins: Warning Orange
+                display.className = "timer-display warning";
+                progressFill.style.backgroundColor = "var(--warning)";
+            } else {
+                display.className = "timer-display";
+                progressFill.style.backgroundColor = ""; // Default gradient
+            }
+        }
+
+        // ==========================================
+        // SUBMISSION & CONFIRMATION
+        // ==========================================
+        function openSubmitModal() {
+            // Calculate answered questions
+            const answeredCount = Object.keys(examState.answers).length;
+            document.getElementById("modal-answered-count").innerText = answeredCount;
+            document.getElementById("modal-bookmark-count").innerText = examState.bookmarks.size;
+
+            document.getElementById("submit-modal").classList.add("active");
+        }
+
+        function closeSubmitModal() {
+            document.getElementById("submit-modal").classList.remove("active");
+        }
+
+        // Submit Exam
+        function submitExam(isAutoSubmit = false) {
+            if (!isAutoSubmit) {
+                closeSubmitModal();
+            }
+
+            clearInterval(examState.timerInterval);
+            examState.completed = true;
+            examState.endTime = new Date();
+
+            // Calculations
+            let score = 0;
+            questions.forEach(q => {
+                if (examState.answers[q.id] === q.answer) {
+                    score++;
+                }
+            });
+
+            const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
+            const timeTakenSecs = (examState.endTime - examState.startTime) / 1000;
+            const formattedTimeTaken = formatTime(timeTakenSecs);
+
+            // Save user result payload
+            const examDate = new Date().toLocaleDateString('te-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+            const examTime = new Date().toLocaleTimeString('te-IN', { hour: '2-digit', minute: '2-digit' });
+
+            const payload = {
+                name: userState.name,
+                surname: userState.surname,
+                fullName: `${userState.surname} ${userState.name}`,
+                marks: score, // Added marks field explicitly
+                score: score,
+                total: TOTAL_QUESTIONS,
+                percentage: percentage,
+                date: examDate,
+                time: examTime,
+                timeTaken: formattedTimeTaken,
+                answers: examState.answers
+            };
+
+            // RENDER CERTIFICATE & RESULTS SCREEN DETAILS
+            document.getElementById("result-score-num").innerText = score;
+            document.getElementById("res-full-name").innerText = payload.fullName;
+            document.getElementById("res-date-time").innerText = `${payload.date} | ${payload.time}`;
+            document.getElementById("res-time-taken").innerText = payload.timeTaken;
+
+            // Update print layouts
+            document.getElementById("cert-name").innerText = payload.fullName;
+            document.getElementById("cert-date").innerText = payload.date;
+            document.getElementById("cert-score").innerText = score;
+            document.getElementById("cert-percent").innerText = percentage;
+            document.getElementById("cert-time-taken").innerText = payload.timeTaken;
+
+            // Adjust percentage circle color
+            const scoreCircle = document.getElementById("score-circle-container");
+            scoreCircle.style.setProperty('--percentage', percentage);
+            if (percentage >= 80) {
+                scoreCircle.style.setProperty('background', `conic-gradient(var(--success) calc(${percentage} * 1%), rgba(255,255,255,0.05) 0)`);
+                document.getElementById("result-rating").innerText = "అద్భుతం! (Excellent Achievement)";
+                document.getElementById("result-rating").style.color = "var(--success)";
+            } else if (percentage >= 50) {
+                scoreCircle.style.setProperty('background', `conic-gradient(var(--accent) calc(${percentage} * 1%), rgba(255,255,255,0.05) 0)`);
+                document.getElementById("result-rating").innerText = "చాలా మంచి ప్రయత్నం! (Good Attempt)";
+                document.getElementById("result-rating").style.color = "var(--accent)";
+            } else {
+                scoreCircle.style.setProperty('background', `conic-gradient(var(--danger) calc(${percentage} * 1%), rgba(255,255,255,0.05) 0)`);
+                document.getElementById("result-rating").innerText = "మళ్ళీ ప్రయత్నించండి. (Keep Studying & Try Again)";
+                document.getElementById("result-rating").style.color = "var(--danger)";
+            }
+
+            // Hide user badge in header
+            document.getElementById("header-user").style.display = "none";
+
+            // ----------------------------------------
+            // FIREBASE INTEGRATION ENGINE
+            // ----------------------------------------
+            const firebaseBadge = document.getElementById("res-firebase-status");
+
+            if (USE_FIREBASE) {
+                firebaseBadge.innerText = "డేటా అప్‌లోడ్ అవుతోంది...";
+                firebaseBadge.className = "detail-value text-accent";
+
+                try {
+                    // Initialize if not already initialized
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    const db = firebase.firestore();
+
+                    db.collection("exam_results").add({
+                        ...payload,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                        .then((docRef) => {
+                            console.log("Firestore Upload Success. Document ID: ", docRef.id);
+                            firebaseBadge.innerText = "సఫలమైంది (Synced)";
+                            firebaseBadge.style.color = "var(--success)";
+                            showToast("డేటా ఫైర్‌బేస్ డేటాబేస్ కు విజయవంతంగా అప్‌లోడ్ చేయబడింది!", "success");
+                        })
+                        .catch((err) => {
+                            console.error("Firestore Error:", err);
+                            firebaseBadge.innerText = "వైఫల్యం (Failed)";
+                            firebaseBadge.style.color = "var(--danger)";
+                            showToast("ఫైర్‌బేస్ కనెక్షన్ లో లోపం సంభవించింది.", "error");
+                            saveToLocal(payload);
+                        });
+                } catch (e) {
+                    console.error("Firebase Execution Error:", e);
+                    firebaseBadge.innerText = "కాన్ఫిగరేషన్ లోపం (Error)";
+                    firebaseBadge.style.color = "var(--danger)";
+                    saveToLocal(payload);
+                }
+            } else {
+                firebaseBadge.innerText = "అనుసంధానం లేదు (Offline)";
+                firebaseBadge.style.color = "var(--text-muted)";
+                saveToLocal(payload);
+            }
+
+            // Generate results breakdown items
+            renderReviewList();
+
+            // Show result
+            switchScreen("results-screen");
+        }
+
+        function saveToLocal(data) {
+            try {
+                const localLogs = JSON.parse(localStorage.getItem("bible_exam_results") || "[]");
+                localLogs.push({ ...data, id: Date.now() });
+                localStorage.setItem("bible_exam_results", JSON.stringify(localLogs));
+            } catch (e) {
+                console.error("Local storage error:", e);
+            }
+        }
+
+        function formatTime(totalSeconds) {
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = Math.floor(totalSeconds % 60);
+
+            let timeStr = "";
+            if (hrs > 0) timeStr += `${hrs} గంటల `;
+            if (mins > 0 || hrs > 0) timeStr += `${mins} నిమిషాల `;
+            timeStr += `${secs} సెకండ్లు`;
+            return timeStr;
+        }
+
+        // ==========================================
+        // RESULTS ANSWER REVIEW FILTERING
+        // ==========================================
+        function renderReviewList() {
+            const reviewContainer = document.getElementById("review-list");
+            reviewContainer.innerHTML = "";
+
+            questions.forEach(q => {
+                const userAns = examState.answers[q.id] || "సమాధానం ఇవ్వలేదు (Not Answered)";
+                const correctAns = q.answer;
+                const isCorrect = userAns === correctAns;
+
+                const card = document.createElement("div");
+                card.id = `review-card-${q.id}`;
+                card.className = `review-card ${isCorrect ? 'correct-item' : 'incorrect-item'}`;
+                card.dataset.correct = isCorrect;
+
+                const rHeader = document.createElement("div");
+                rHeader.className = "review-q-header";
+
+                const rText = document.createElement("div");
+                rText.className = "review-q-text";
+                rText.innerHTML = `<strong>${q.id})</strong> ${q.question}`;
+
+                const statusBadge = document.createElement("span");
+                statusBadge.className = `review-status-badge ${isCorrect ? 'correct' : 'incorrect'}`;
+                statusBadge.innerText = isCorrect ? "సరైనది (Correct)" : "తప్పు (Incorrect)";
+
+                rHeader.appendChild(rText);
+                rHeader.appendChild(statusBadge);
+                card.appendChild(rHeader);
+
+                // Compare answer blocks
+                const compGrid = document.createElement("div");
+                compGrid.className = "answer-comp-grid";
+
+                const userBlock = document.createElement("div");
+                userBlock.className = "ans-block";
+                userBlock.innerHTML = `
+          <span class="ans-label">మీ సమాధానం</span>
+          <span class="ans-text ${isCorrect ? 'success' : 'danger'}">${userAns}</span>
+        `;
+
+                const correctBlock = document.createElement("div");
+                correctBlock.className = "ans-block";
+                correctBlock.innerHTML = `
+          <span class="ans-label">సరైన సమాధానం</span>
+          <span class="ans-text success">${correctAns}</span>
+        `;
+
+                compGrid.appendChild(userBlock);
+                compGrid.appendChild(correctBlock);
+                card.appendChild(compGrid);
+
+                reviewContainer.appendChild(card);
+            });
+        }
+
+        function filterReview(filterType) {
+            // Toggle button states
+            document.querySelectorAll(".review-filter .filter-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+            document.getElementById(`filter-${filterType}`).classList.add("active");
+
+            // Show/Hide review items
+            document.querySelectorAll(".review-list .review-card").forEach(card => {
+                const isCorrect = card.dataset.correct === "true";
+                if (filterType === "all") {
+                    card.style.display = "flex";
+                } else if (filterType === "correct") {
+                    card.style.display = isCorrect ? "flex" : "none";
+                } else if (filterType === "incorrect") {
+                    card.style.display = !isCorrect ? "flex" : "none";
+                }
+            });
+        }
+
+        // ==========================================
+        // RESTART SYSTEM
+        // ==========================================
+        function restartExam() {
+            // Reset inputs
+            document.getElementById("user-surname").value = "";
+            document.getElementById("user-name").value = "";
+
+            // Reset host settings password state
+            const pwdInput = document.getElementById("host-password");
+            if (pwdInput) pwdInput.value = "";
+            const pwdGroup = document.getElementById("host-password-group");
+            if (pwdGroup) pwdGroup.style.display = "block";
+            const timeInputs = document.getElementById("host-time-inputs");
+            if (timeInputs) timeInputs.style.display = "none";
+            document.getElementById("header-user").style.display = "none";
+
+            // Reset state variables
+            examState.completed = false;
+            examState.started = false;
+            examState.currentPage = 0;
+            examState.answers = {};
+            examState.bookmarks.clear();
+            examState.visited.clear();
+            examState.startTime = null;
+            examState.endTime = null;
+            const hostHours = parseInt(document.getElementById("host-hours").value);
+            const hostMins = parseInt(document.getElementById("host-minutes").value);
+            if (!isNaN(hostHours) && !isNaN(hostMins)) {
+                examState.timeLeft = (hostHours * 3600) + (hostMins * 60);
+            } else {
+                examState.timeLeft = 100 * 60;
+            }
+            examState.totalTime = examState.timeLeft;
+
+            if (examState.timerInterval) {
+                clearInterval(examState.timerInterval);
+                examState.timerInterval = null;
+            }
+
+            // Regenerate randomized incorrect options for a completely fresh attempt
+            const uniqueAnswers = Array.from(new Set(questions.map(q => q.answer)));
+            questions.forEach(q => {
+                if (q.options && q.options.length > 0) {
+                    examState.options[q.id] = [...q.options];
+                } else {
+                    const correctVal = q.answer;
+                    const incorrectPool = uniqueAnswers.filter(ans => ans !== correctVal);
+                    const shuffledIncorrect = shuffleArray([...incorrectPool]);
+                    const selectedIncorrect = shuffledIncorrect.slice(0, 3);
+                    const combined = [correctVal, ...selectedIncorrect];
+                    examState.options[q.id] = shuffleArray(combined);
+                }
+            });
+
+            // Reset review filters
+            document.querySelectorAll(".review-filter .filter-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+            document.getElementById("filter-all").classList.add("active");
+
+            // Return to register screen
+            switchScreen("welcome-screen");
+        }
+
+        function toggleHostSettings() {
+            const content = document.getElementById("host-settings-content");
+            const icon = document.getElementById("host-settings-icon");
+            if (content.style.display === "none") {
+                content.style.display = "block";
+                icon.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
+            } else {
+                content.style.display = "none";
+                icon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+            }
+        }
+
+        function updateWelcomeRules() {
+            const h = parseInt(document.getElementById("host-hours").value) || 0;
+            const m = parseInt(document.getElementById("host-minutes").value) || 0;
+            const rules = document.querySelectorAll(".rules-list li strong");
+            if (rules.length >= 2) {
+                rules[1].innerText = `${h} గంటల ${m} నిమిషాలు (${h}h:${m}m)`;
+            }
+        }
+
+        function checkHostPassword() {
+            const pwd = document.getElementById("host-password").value;
+            const timeInputs = document.getElementById("host-time-inputs");
+            if (pwd === "paul1810") {
+                timeInputs.style.display = "block";
+                document.getElementById("host-password-group").style.display = "none";
+                showToast("పాస్‌వర్డ్ సరిఅయినది. సమయాన్ని మార్చవచ్చు.", "success");
+                loadHostLogs();
+            }
+        }
+
+                        function loadHostLogs() {
+            const tbody = document.getElementById("host-logs-tbody");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            try {
+                const logs = JSON.parse(localStorage.getItem("bible_exam_results") || "[]");
+                if (logs.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 1rem; color: var(--text-muted);">ఎటువంటి ఫలితాలు లేవు (No records found)</td></tr>`;
+                    return;
+                }
+
+                // Show latest first
+                logs.reverse().forEach(log => {
+                    const tr = document.createElement("tr");
+                    tr.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+
+                    const nameTd = document.createElement("td");
+                    nameTd.style.padding = "0.4rem";
+                    nameTd.innerText = log.fullName || `${log.surname} ${log.name}`;
+
+                    const scoreTd = document.createElement("td");
+                    scoreTd.style.padding = "0.4rem";
+                    scoreTd.style.textAlign = "center";
+                    scoreTd.innerText = `${log.score} / ${log.total || 260}`;
+
+                    const timeTakenTd = document.createElement("td");
+                    timeTakenTd.style.padding = "0.4rem";
+                    timeTakenTd.style.textAlign = "center";
+                    timeTakenTd.innerText = log.timeTaken || '-';
+
+                    const dateTd = document.createElement("td");
+                    dateTd.style.padding = "0.4rem";
+                    dateTd.style.textAlign = "right";
+                    dateTd.innerText = `${log.date} ${log.time || ''}`;
+
+                    tr.appendChild(nameTd);
+                    tr.appendChild(scoreTd);
+                    tr.appendChild(timeTakenTd);
+                    tr.appendChild(dateTd);
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error("Error loading host logs:", e);
+            }
+        }
+
+        function clearHostLogs() {
+            if (confirm("నిజంగా రికార్డులను తొలగించాలనుకుంటున్నారా? (Are you sure you want to clear all history?)")) {
+                localStorage.removeItem("bible_exam_results");
+                loadHostLogs();
+                showToast("రికార్డులు తొలగించబడ్డాయి.", "success");
+            }
+        }
+    </script>
+</body>
+
+</html>
